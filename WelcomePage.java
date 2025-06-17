@@ -6,10 +6,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class WelcomePage extends JFrame {
-    private String memberID;
+    private String memberID, memberName;
     private JButton goToRecipe;
     private JPanel buttonPanel;
-    public WelcomePage(String memberID) {
+    public WelcomePage(String memberID, String memberName) {
         JLabel label = new JLabel("Welcome! You are logged in.");
         add(label);
         setSize(400, 200);
@@ -19,7 +19,7 @@ public class WelcomePage extends JFrame {
         goToRecipe = new JButton("Add Recipe");
         goToRecipe.addActionListener(e -> {
             // Go to recipe form follow the memberID
-            new test(memberID);  
+            new test(memberID,memberName);  
             this.dispose();
         });
 

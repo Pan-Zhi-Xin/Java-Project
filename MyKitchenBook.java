@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 
 public class MyKitchenBook extends JFrame implements ActionListener
 {
-    private String memberID;
+    private String memberID, memberName;
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
     private JTextField emailTf;
     private JPasswordField passwordTf;
@@ -115,6 +115,7 @@ public class MyKitchenBook extends JFrame implements ActionListener
                             loginSuccess = true;
                             // get memberID from txt file
                             memberID = parts[0];
+                            memberName = parts[1];
                             break;
                         }
                     }
@@ -131,7 +132,7 @@ public class MyKitchenBook extends JFrame implements ActionListener
             {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Login Successful");
-                new WelcomePage(memberID);
+                new WelcomePage(memberID, memberName);
                 this.dispose();
             } 
             else 
