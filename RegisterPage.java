@@ -1,3 +1,9 @@
+// GROUP 2
+// Personal Digital Recipe Management System
+// 1221207256 PAN ZHI XIN
+// 1221208105 KONG LEE CHING
+// 1221208223 LOY YU XUAN
+
 package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
@@ -132,7 +138,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 String categoryFileName = new_id + "_category.txt";
                 try (FileWriter categoryWriter = new FileWriter(categoryFileName)) 
                 {
-                    categoryWriter.write("Default category\n");
+                    categoryWriter.write("1, default\n");
                 } catch (IOException ex) {
                     messageLabel.setForeground(Color.RED);
                     messageLabel.setText("Error writing categoty.txt");
@@ -149,7 +155,7 @@ public class RegisterPage extends JFrame implements ActionListener{
             if (registerSuccess) {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Register Successful");
-                new LandingPage();
+                new MyKitchenBook();
                 this.dispose();
             }
         }
