@@ -79,11 +79,11 @@ public class LandingPage extends JFrame implements ActionListener {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split(",");
-                    if (parts.length == 2) {
-                        String storedEmail = parts[0].trim();
-                        String storedPassword = parts[1].trim();
+                    if (parts.length == 4) {
+                        String custEmail = parts[2].trim();
+                        String custPassword = parts[3].trim();
 
-                        if (email.equals(storedEmail) && password.equals(storedPassword)) {
+                        if (email.equals(custEmail) && password.equals(custPassword)) {
                             loginSuccess = true;
                             break;
                         }
