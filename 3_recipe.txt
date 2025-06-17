@@ -1,0 +1,10 @@
+1|Pancakes|Fluffy pancakes|00:30|3|src/images/pancakes.jpg|2|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+2|Scrambled Egg|creamy eggs|00:05|3|src/images/scrambledegg.jpg|2|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+3|Cheese Sandwich|The cheese is to die for|00:10|3|src/images/cheesesandwich.jpeg|2|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+4|Mee goreng|Sarapan klasik anak Malaysia|00:45|3|src/images/meegoreng.jpeg|1|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+5|Nasi Lemak|Sambal tu ang penting|02:30|3|src/images/nasilemak.jpeg|1|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+6|Bee hun|Sup ke Goreng? Dua-dua sedap!|00:20|3|src/images/beehun.jpeg|1|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+7|Martini|A taste of life|00:05|3|src/images/martini.jpeg|4|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+8|Milkshake|Bring back to the 90s|00:15|3|src/images/milkshake.jpeg|4|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+9|Onion Rings|Calories of happiness|00:30|3|src/images/onionrings.jpeg|3|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook
+10|Lava Cake|Chocolate Meltdown!|03:00|3|src/images/lavacake.jpeg|3|Flour:2 cups,Sugar:1 tbsp,Milk:1 cup|Mix ingredients,Heat pan,Pour batter,Flip and cook

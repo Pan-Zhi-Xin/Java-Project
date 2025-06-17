@@ -1,5 +1,4 @@
 package com.mycompany.java_project;
-import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,8 +9,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,7 +37,6 @@ class Categories{
 
 //public class to display the Welcome Page after successfully login
 public class WelcomePage extends JFrame {
-    private ImageIcon add;
     private JButton logout, addCategory;
     private JPanel topBar, buttonPanel, welcomePagePanel;
     private JLabel message;
@@ -73,12 +69,25 @@ public class WelcomePage extends JFrame {
         message.setPreferredSize(new Dimension(500,120));
         
         //the add category button
+        addCategory = new JButton("+");
+        addCategory.setFont(new Font("Roboto", Font.BOLD, 32));
+        addCategory.setForeground(Color.WHITE);
+        addCategory.setBackground(new Color(29, 61, 89));
+        addCategory.setFocusPainted(false); // remove dotted focus border
+        addCategory.setBorderPainted(false); // remove button border
+        addCategory.setContentAreaFilled(false); // remove fill
+        addCategory.setOpaque(true); // still show background
+        //addCategory.addActionListener(e -> {
+                // return to landing page and log out
+                //new MyKitchenBook();  
+                //this.dispose();
+            //});
         
         //combine three of them to craete the tab bar on top
         topBar = new JPanel(new BorderLayout());
         topBar.add(logout, BorderLayout.WEST);
         topBar.add(message, BorderLayout.CENTER);
-        //topBar.add(addCategory);
+        topBar.add(addCategory,BorderLayout.EAST);
         
         //open the memberID_category.txt to get all the category
         try {
@@ -135,7 +144,7 @@ public class WelcomePage extends JFrame {
 
             goToRecipeDisplay.addActionListener(e -> {
                 // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
-                new RecipeDisplayPage(memberID,category[index].getCategoryID());  
+                new RecipeDisplayPage(memberID,memberName,category[index].getCategoryID(), category[index].getCategoryName());  
                 this.dispose();
             });
             JPanel buttonWrapper = new JPanel();
