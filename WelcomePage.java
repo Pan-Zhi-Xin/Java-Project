@@ -69,7 +69,7 @@ public class WelcomePage extends JFrame {
         message.setPreferredSize(new Dimension(500,120));
         
         //the add category button
-        addCategory = new JButton("+");
+        addCategory = new JButton("+  ");
         addCategory.setFont(new Font("Roboto", Font.BOLD, 32));
         addCategory.setForeground(Color.WHITE);
         addCategory.setBackground(new Color(29, 61, 89));

@@ -16,8 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.BoxLayout;
 
-//Categories class to save category id and name
+
+//Recipes class to save recipe id, name, and image file path
 class Recipes{
     //private instance data
     private int recipeID;
@@ -30,18 +34,20 @@ class Recipes{
         this.recipeName = recipeName;
         this.imagepath = imagepath;
     }
-    
+    public int getRecipeID(){return recipeID;}
     public String getRecipeName(){return recipeName;}
+    public String getRecipeImage(){return imagepath;}
 
-}//end of class Categories
+}//end of class Recipes
 
 
 //public class to display the Welcome Page after successfully login
 public class RecipeDisplayPage extends JFrame {
-    private JButton logout, addProduct;
+    private JButton logout, addRecipe;
     private JPanel topBar, buttonPanel, welcomePagePanel;
     private JLabel message;
     private Recipes[] recipe;
+    private ImageIcon image;
     
     //constructor to display the GUI
     public RecipeDisplayPage(String memberID, String memberName, int categoryID, String categoryName) {
@@ -56,10 +62,10 @@ public class RecipeDisplayPage extends JFrame {
         logout.setContentAreaFilled(false); // remove fill
         logout.setOpaque(true); // still show background
         logout.addActionListener(e -> {
-                // return to welcome page
-                new WelcomePage(memberID,memberName);  
-                this.dispose();
-            });
+            // return to welcome page
+            new WelcomePage(memberID,memberName);  
+            this.dispose();
+        });
         
         //the welcome message at the top
         message = new JLabel("  "+categoryName);
@@ -69,13 +75,26 @@ public class RecipeDisplayPage extends JFrame {
         message.setOpaque(true);
         message.setPreferredSize(new Dimension(500,120));
         
-        //the add product button
+        //the add recipe button
+        addRecipe = new JButton("+  ");
+        addRecipe.setFont(new Font("Roboto", Font.BOLD, 32));
+        addRecipe.setForeground(Color.WHITE);
+        addRecipe.setBackground(new Color(29, 61, 89));
+        addRecipe.setFocusPainted(false); // remove dotted focus border
+        addRecipe.setBorderPainted(false); // remove button border
+        addRecipe.setContentAreaFilled(false); // remove fill
+        addRecipe.setOpaque(true); // still show background
+        addRecipe.addActionListener(e -> {
+                // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
+                new test(memberID);  
+                this.dispose();
+            });
         
         //combine three of them to craete the tab bar on top
         topBar = new JPanel(new BorderLayout());
         topBar.add(logout, BorderLayout.WEST);
         topBar.add(message, BorderLayout.CENTER);
-        //topBar.add(addCategory);
+        topBar.add(addRecipe,BorderLayout.EAST);
         
         //open the memberID_recipe.txt to get all the recipes
         try {
@@ -112,13 +131,17 @@ public class RecipeDisplayPage extends JFrame {
         
         welcomePagePanel = new JPanel(new BorderLayout());
         welcomePagePanel.add(topBar, BorderLayout.NORTH);
-        buttonPanel = new JPanel(new GridLayout(recipe.length,3,30,30));
+        buttonPanel = new JPanel(new GridLayout(0,4,30,30));
         buttonPanel.setBorder(new EmptyBorder(30,10,20,20));
         
         //use a for loop to setup the category button
         for(int i=0;i<recipe.length;i++){
-            final int index = i;
+            //recipe image display
+            ImageIcon originalIcon = new ImageIcon(recipe[i].getRecipeImage());
+            Image scaledImage = originalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+            JLabel imageSpace = new JLabel(new ImageIcon(scaledImage));
             
+            //recipe name display
             JButton goToRecipeDetail = new JButton(recipe[i].getRecipeName());
             goToRecipeDetail.setFont(new Font("Roboto", Font.BOLD, 24));
             goToRecipeDetail.setBackground(new Color(73, 117, 160));
@@ -128,13 +151,16 @@ public class RecipeDisplayPage extends JFrame {
             goToRecipeDetail.setOpaque(true);
             goToRecipeDetail.setPreferredSize(new Dimension(500, 50));
 
-            goToRecipeDetail.addActionListener(e -> {
+            //goToRecipeDetail.addActionListener(e -> {
                 // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
-                new test(memberID);  
-                this.dispose();
-            });
+                //new test(memberID);  
+                //this.dispose();
+            //});
             JPanel buttonWrapper = new JPanel();
+            buttonWrapper.setLayout(new BoxLayout(buttonWrapper,BoxLayout.Y_AXIS));
             buttonWrapper.setOpaque(false); // to keep background consistent
+            buttonWrapper.setPreferredSize(new Dimension(200, 220)); // Optional: uniform size
+            buttonWrapper.add(imageSpace);
             buttonWrapper.add(goToRecipeDetail);
 
             buttonPanel.add(buttonWrapper);
