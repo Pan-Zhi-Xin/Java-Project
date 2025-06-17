@@ -19,7 +19,7 @@ public class WelcomePage extends JFrame {
         goToRecipe = new JButton("Add Recipe");
         goToRecipe.addActionListener(e -> {
             // Go to recipe form follow the memberID
-            new test(memberID,memberName);  
+            new test(memberID);  
             this.dispose();
         });
 
