@@ -1,0 +1,4 @@
+1,Default
+2,Breakfast
+3,Snack
+4,Beverage
