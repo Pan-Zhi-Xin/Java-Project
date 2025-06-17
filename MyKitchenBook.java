@@ -1,3 +1,5 @@
+package com.mycompany.java_project;
+
 import javax.swing.JFrame;
 
 

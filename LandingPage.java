@@ -16,22 +16,27 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class LandingPage extends JFrame implements ActionListener {
+public class LandingPage extends JFrame implements ActionListener
+{
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
     private JTextField emailTf;
     private JPasswordField passwordTf;
     private JButton loginBtn, signUpBtn;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         LandingPage frame = new LandingPage();
         frame.setSize(1000, 700);
         frame.setTitle("My Kitchen Book");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public LandingPage() {
+        this.setSize(1000, 700);
+        this.setTitle("My Kitchen Book");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
         Font title = new Font ("Arial", Font.BOLD | Font.ITALIC, 16);  
         titleLabel = new JLabel("Welcome to My Kitchen Book");
         titleLabel.setFont(title);
@@ -65,45 +70,72 @@ public class LandingPage extends JFrame implements ActionListener {
         add(messagePanel, BorderLayout.SOUTH);
 
         loginBtn.addActionListener(this);
+        signUpBtn.addActionListener(this);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginBtn) {
+    public void actionPerformed(ActionEvent e) 
+    {
+        if (e.getSource() == loginBtn) 
+        {
             String email = emailTf.getText().trim();
             String password = String.valueOf(passwordTf.getPassword()).trim();
 
             boolean loginSuccess = false;
-
-            try (BufferedReader reader = new BufferedReader(new FileReader("customer.txt"))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
+            
+            if (email.trim().isEmpty() || password.trim().isEmpty()) 
+            {
+                messageLabel.setForeground(Color.RED);
+                messageLabel.setText("Please fill in all fields.");
+                return;
+            }
+            
+            try
+            {
+                BufferedReader readFile = new BufferedReader (new FileReader("customer.txt"));
+                String line = readFile.readLine();
+                
+                while (line != null)
+                {
                     String[] parts = line.split(",");
-                    if (parts.length == 4) {
+                    if (parts.length == 4)
+                    {
                         String custEmail = parts[2].trim();
                         String custPassword = parts[3].trim();
 
-                        if (email.equals(custEmail) && password.equals(custPassword)) {
+                        if (email.equals(custEmail) && password.equals(custPassword))
+                        {
                             loginSuccess = true;
                             break;
                         }
                     }
-                }
+                    line = readFile.readLine();
+                } 
+                readFile.close();
             } catch (IOException ex) {
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Error reading file.");
                 return;
             }
 
-            if (loginSuccess) {
+            if (loginSuccess) 
+            {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Login Successful");
                 new WelcomePage();
                 this.dispose();
-            } else {
+            } 
+            else 
+            {
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid Email or Password");
             }
+        }
+        
+        if (e.getSource() == signUpBtn)
+        {
+            new RegisterPage();
+            this.dispose();
         }
     }
 }
