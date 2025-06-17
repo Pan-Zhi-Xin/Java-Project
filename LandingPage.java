@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 
 public class LandingPage extends JFrame implements ActionListener
 {
+    private String memberID;
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
     private JTextField emailTf;
     private JPasswordField passwordTf;
@@ -106,6 +107,8 @@ public class LandingPage extends JFrame implements ActionListener
                         if (email.equals(custEmail) && password.equals(custPassword))
                         {
                             loginSuccess = true;
+                            // get memberID from txt file
+                            memberID = parts[0];
                             break;
                         }
                     }
@@ -122,7 +125,7 @@ public class LandingPage extends JFrame implements ActionListener
             {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Login Successful");
-                new WelcomePage();
+                new WelcomePage(memberID);
                 this.dispose();
             } 
             else 
