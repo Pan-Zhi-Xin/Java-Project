@@ -88,7 +88,7 @@ public class RecipeDisplayPage extends JFrame {
         addRecipe.setOpaque(true); // still show background
         addRecipe.addActionListener(e -> {
                 // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
-                new test(memberID, memberName, categoryID, categoryName) ;  
+                new AddRecipePage(memberID, memberName, categoryID, categoryName) ;  
                 this.dispose();
             });
         

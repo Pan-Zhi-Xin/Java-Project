@@ -2,6 +2,7 @@ package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.File;
@@ -25,8 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-public class test extends JFrame {
-    private JLabel title1, name, prepareTime, difficultyLevel, category, imageLabel, step, description;
+public class AddRecipePage extends JFrame {
+    private JLabel title1, name, prepareTime, difficultyLevel, category, image, step, description;
     private JTextField tfName, tfTime;
     private JPanel basicInfoPanel, ingredientPanel, stepPanel, buttonPanel, mainPanel;
     private JComboBox cDifficulty, cCategory;
@@ -38,7 +39,7 @@ public class test extends JFrame {
     private String memberID, memberName, categoryName;
     private int categoryID;
 
-        public test(String memberID, String memberName, int categoryID, String categoryName) {
+        public AddRecipePage(String memberID, String memberName, int categoryID, String categoryName) {
         this.memberID = memberID;
         this.memberName = memberName;
         this.categoryID = categoryID;
@@ -50,41 +51,64 @@ public class test extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Vertical layout
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         // ---------- Basic Info Panel ----------
-        JPanel basicInfoPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+        JPanel basicInfoPanel = new JPanel(new GridLayout(3, 2)); // NEW: 3 rows, 2 columns
 
-        basicInfoPanel.add(new JLabel("Name:"));
-        tfName = new JTextField(20);
-        basicInfoPanel.add(tfName);
+        // Name
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        namePanel.add(new JLabel("Name            :"));
+        tfName = new JTextField();
+        tfName.setPreferredSize(new Dimension(250, 50));
+        namePanel.add(tfName);
+        basicInfoPanel.add(namePanel);
 
-        basicInfoPanel.add(new JLabel("Prepare Time:"));
-        tfTime = new JTextField(20);
-        basicInfoPanel.add(tfTime);
+        // Prepare Time
+        JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        timePanel.add(new JLabel("Prepare Time :"));
+        tfTime = new JTextField();
+        tfTime.setPreferredSize(new Dimension(250, 50));
+        timePanel.add(tfTime);
+        basicInfoPanel.add(timePanel);
 
-        basicInfoPanel.add(new JLabel("Difficulty (1-5):"));
+        // Difficulty
+        JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        difficultyPanel.add(new JLabel("Difficulty (1-5) :"));
         String[] difficulty = {"1", "2", "3", "4", "5"};
         cDifficulty = new JComboBox(difficulty);
-        basicInfoPanel.add(cDifficulty);
+        cDifficulty.setPreferredSize(new Dimension(250, 50));
+        difficultyPanel.add(cDifficulty);
+        basicInfoPanel.add(difficultyPanel);
 
-        basicInfoPanel.add(new JLabel("Category:"));
+        // Category
+        JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        categoryPanel.add(new JLabel("Category        :"));
         cCategory = new JComboBox();
+        cCategory.setPreferredSize(new Dimension(250, 50));
         loadCategories();
-        basicInfoPanel.add(cCategory);
+        categoryPanel.add(cCategory);
+        basicInfoPanel.add(categoryPanel);
 
-        basicInfoPanel.add(new JLabel("Description:"));
-        taDescription = new JTextArea(3, 20);
-        basicInfoPanel.add(new JScrollPane(taDescription));
+        // Description
+        JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        descriptionPanel.add(new JLabel("Description    :"));
+        taDescription = new JTextArea();
+        JScrollPane scrollDescription = new JScrollPane(taDescription);
+        scrollDescription.setPreferredSize(new Dimension(250, 50)); 
+        descriptionPanel.add(scrollDescription);
+        basicInfoPanel.add(descriptionPanel);
 
-        basicInfoPanel.add(new JLabel("Image:"));
-        JPanel imagePanel = new JPanel(new BorderLayout());
+
+        // Image Upload
+        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        imagePanel.add(new JLabel("Image             :"));
         bImage = new JButton("Upload Image");
         bImage.addActionListener(e -> uploadImage());
-        imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(100, 100));
-        imagePanel.add(bImage, BorderLayout.NORTH);
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        image = new JLabel();
+        image.setPreferredSize(new Dimension(200, 100));
+        imagePanel.add(bImage);
+        imagePanel.add(image);
         basicInfoPanel.add(imagePanel);
 
         mainPanel.add(basicInfoPanel);
@@ -93,7 +117,6 @@ public class test extends JFrame {
         String[] columnNames = {"Ingredient", "Quantity"};
         DefaultTableModel ingredientModel = new DefaultTableModel(columnNames, 0);
         tIngredient = new JTable(ingredientModel);
-
         JScrollPane spIngredientTable = new JScrollPane(tIngredient);
         spIngredientTable.setPreferredSize(new Dimension(900, 100));
         mainPanel.add(new JLabel("Ingredients:"));
@@ -103,13 +126,7 @@ public class test extends JFrame {
         JPanel ingredientButtonPanel = new JPanel();
         bAdd = new JButton("+");
         bSub = new JButton("-");
-
-        // Add row on bAdd click
-        bAdd.addActionListener(e -> {
-            ingredientModel.addRow(new Object[]{"", ""});
-        });
-
-        // Remove selected row on bSub click
+        bAdd.addActionListener(e -> ingredientModel.addRow(new Object[]{"", ""}));
         bSub.addActionListener(e -> {
             int selectedRow = tIngredient.getSelectedRow();
             if (selectedRow != -1) {
@@ -118,16 +135,14 @@ public class test extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please select a row to delete.");
             }
         });
-
         ingredientButtonPanel.add(bAdd);
         ingredientButtonPanel.add(bSub);
         mainPanel.add(ingredientButtonPanel);
 
-
         // ---------- Step Panel ----------
         JPanel stepPanel = new JPanel(new BorderLayout());
         stepPanel.add(new JLabel("Steps:"), BorderLayout.NORTH);
-        taStep = new JTextArea(5, 20);
+        taStep = new JTextArea(5, 10);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
         mainPanel.add(stepPanel);
 
@@ -144,8 +159,7 @@ public class test extends JFrame {
         buttonPanel.add(bCancel);
         mainPanel.add(buttonPanel);
 
-        
-        // Wrap everything in scroll pane
+        // ---------- Wrap with ScrollPane ----------
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         add(scrollPane);
 
@@ -180,6 +194,28 @@ public class test extends JFrame {
             String description = taDescription.getText().trim();
             String steps = taStep.getText().replace("\n", ",").trim();
             String image = imagePath;
+
+            // Validate that required fields are not empty
+            if (name.isEmpty() || time.isEmpty() || description.isEmpty() || steps.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in all the fields (Name, Time, Description, Steps).");
+                return;
+            }
+
+            // Validate that at least one ingredient is added
+            if (tIngredient.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Please add at least one ingredient.");
+                return;
+            }
+
+            // Validate that each ingredient row is filled properly
+            for (int i = 0; i < tIngredient.getRowCount(); i++) {
+                Object ing = tIngredient.getValueAt(i, 0);
+                Object qty = tIngredient.getValueAt(i, 1);
+                if (ing == null || ing.toString().trim().isEmpty() || qty == null || qty.toString().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Please complete all ingredient rows (name and quantity).");
+                    return;
+                }
+            }
 
             StringBuilder ingredients = new StringBuilder();
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
@@ -255,7 +291,7 @@ public class test extends JFrame {
                 imagePath = destination.getPath();
                 ImageIcon icon = new ImageIcon(imagePath);
                 Image scaledImage = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(scaledImage));
+                image.setIcon(new ImageIcon(scaledImage));
 
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Failed to save image: " + e.getMessage());
