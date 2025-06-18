@@ -1,14 +1,19 @@
 package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,34 +22,38 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 
 public class test extends JFrame {
-    private JLabel title1, name, prepareTime, difficultyLevel, category, image, step, description;
+    private JLabel title1, name, prepareTime, difficultyLevel, category, imageLabel, step, description;
     private JTextField tfName, tfTime;
-    private JPanel basicInfoPanel, ingredientPanel, stepPanel, buttonPanel;
+    private JPanel basicInfoPanel, ingredientPanel, stepPanel, buttonPanel, mainPanel;
     private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
-    private JScrollPane spIngredientName;
+    private JScrollPane spIngredientName, spIngredientTable;
     private JButton bImage, bSave, bAdd, bSub, bCancel;
+    private String imagePath = "images/default.jpg";
     private String memberID, memberName, categoryName;
     private int categoryID;
 
-    public test(String memberID, String memberName, int categoryID, String categoryName) {
+        public test(String memberID, String memberName, int categoryID, String categoryName) {
         this.memberID = memberID;
         this.memberName = memberName;
         this.categoryID = categoryID;
         this.categoryName = categoryName;
-        this.memberID = memberID;
+
         setTitle("My Kitchen Book - Add Recipe");
         setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
-        // basicInfoPanel is for basic info part
-        basicInfoPanel = new JPanel();
-        basicInfoPanel.setLayout(new GridLayout(6, 2)); 
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Vertical layout
+
+        // ---------- Basic Info Panel ----------
+        JPanel basicInfoPanel = new JPanel(new GridLayout(6, 2, 5, 5));
 
         basicInfoPanel.add(new JLabel("Name:"));
         tfName = new JTextField(20);
@@ -56,11 +65,11 @@ public class test extends JFrame {
 
         basicInfoPanel.add(new JLabel("Difficulty (1-5):"));
         String[] difficulty = {"1", "2", "3", "4", "5"};
-        cDifficulty = new JComboBox(difficulty); 
+        cDifficulty = new JComboBox(difficulty);
         basicInfoPanel.add(cDifficulty);
 
         basicInfoPanel.add(new JLabel("Category:"));
-        cCategory = new JComboBox(); 
+        cCategory = new JComboBox();
         loadCategories();
         basicInfoPanel.add(cCategory);
 
@@ -68,48 +77,80 @@ public class test extends JFrame {
         taDescription = new JTextArea(3, 20);
         basicInfoPanel.add(new JScrollPane(taDescription));
 
-        add(basicInfoPanel, BorderLayout.NORTH);
+        basicInfoPanel.add(new JLabel("Image:"));
+        JPanel imagePanel = new JPanel(new BorderLayout());
+        bImage = new JButton("Upload Image");
+        bImage.addActionListener(e -> uploadImage());
+        imageLabel = new JLabel();
+        imageLabel.setPreferredSize(new Dimension(100, 100));
+        imagePanel.add(bImage, BorderLayout.NORTH);
+        imagePanel.add(imageLabel, BorderLayout.CENTER);
+        basicInfoPanel.add(imagePanel);
 
-        // p2 is for ingredients table, step and save button
-        String[][] data = {{"Egg", "2"}, {"Carrot", "1"}};
+        mainPanel.add(basicInfoPanel);
+
+        // ---------- Ingredients Table ----------
         String[] columnNames = {"Ingredient", "Quantity"};
-        tIngredient = new JTable(data, columnNames);
-        add(new JScrollPane(tIngredient), BorderLayout.CENTER);
+        DefaultTableModel ingredientModel = new DefaultTableModel(columnNames, 0);
+        tIngredient = new JTable(ingredientModel);
 
-        ingredientPanel = new JPanel();
-        ingredientPanel.setLayout(new BorderLayout());
-        // stepPanel is the sub panel for ingredientPanel
-        stepPanel = new JPanel();
-        stepPanel.setLayout(new BorderLayout());
+        JScrollPane spIngredientTable = new JScrollPane(tIngredient);
+        spIngredientTable.setPreferredSize(new Dimension(900, 100));
+        mainPanel.add(new JLabel("Ingredients:"));
+        mainPanel.add(spIngredientTable);
+
+        // Add/Remove buttons for Ingredients
+        JPanel ingredientButtonPanel = new JPanel();
+        bAdd = new JButton("+");
+        bSub = new JButton("-");
+
+        // Add row on bAdd click
+        bAdd.addActionListener(e -> {
+            ingredientModel.addRow(new Object[]{"", ""});
+        });
+
+        // Remove selected row on bSub click
+        bSub.addActionListener(e -> {
+            int selectedRow = tIngredient.getSelectedRow();
+            if (selectedRow != -1) {
+                ingredientModel.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to delete.");
+            }
+        });
+
+        ingredientButtonPanel.add(bAdd);
+        ingredientButtonPanel.add(bSub);
+        mainPanel.add(ingredientButtonPanel);
+
+
+        // ---------- Step Panel ----------
+        JPanel stepPanel = new JPanel(new BorderLayout());
         stepPanel.add(new JLabel("Steps:"), BorderLayout.NORTH);
         taStep = new JTextArea(5, 20);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
+        mainPanel.add(stepPanel);
 
-        ingredientPanel.add(stepPanel, BorderLayout.CENTER);
-
+        // ---------- Buttons Panel ----------
+        JPanel buttonPanel = new JPanel();
         bSave = new JButton("Save Recipe");
         bSave.addActionListener(e -> saveRecipeToFile());
-        ingredientPanel.add(bSave, BorderLayout.SOUTH);      
-        
         bCancel = new JButton("Cancel");
         bCancel.addActionListener(e -> {
             new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
-            this.dispose(); // close current frame
+            this.dispose();
         });
-        // buttonPanel is the sub panel for ingredientPanel
-        buttonPanel = new JPanel();
         buttonPanel.add(bSave);
         buttonPanel.add(bCancel);
+        mainPanel.add(buttonPanel);
 
-        ingredientPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        add(ingredientPanel, BorderLayout.SOUTH);
-
+        // Wrap everything in scroll pane
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        add(scrollPane);
 
         setVisible(true);
     }
 
-    // Load category options from memberID_category.txt
     private void loadCategories() {
         String filename = memberID + "_category.txt";
         File file = new File(filename);
@@ -127,8 +168,6 @@ public class test extends JFrame {
         }
     }
 
-
-    // Save recipe data to memberID_recipe.txt
     private void saveRecipeToFile() {
         try {
             String id = getNextRecipeID();
@@ -139,7 +178,7 @@ public class test extends JFrame {
             String categoryID = selectedCategory.split(",")[0];
             String description = taDescription.getText().trim();
             String steps = taStep.getText().replace("\n", ",").trim();
-            String image = "images/default.jpg";
+            String image = imagePath;
 
             StringBuilder ingredients = new StringBuilder();
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
@@ -152,7 +191,7 @@ public class test extends JFrame {
             }
 
             String line = id + "|" + name + "|" + description + "|" + time + "|" +
-                          difficulty + "|" + image + "|" + categoryID + "|" + ingredients + "|" + steps;
+                    difficulty + "|" + image + "|" + categoryID + "|" + ingredients + "|" + steps;
 
             PrintWriter writer = new PrintWriter(new FileWriter(memberID + "_recipe.txt", true));
             writer.println(line);
@@ -164,8 +203,6 @@ public class test extends JFrame {
         }
     }
 
-
-    // Generate the next recipe ID based on the last used ID
     private String getNextRecipeID() {
         int maxID = 0;
         File file = new File(memberID + "_recipe.txt");
@@ -178,9 +215,50 @@ public class test extends JFrame {
                 if (id > maxID) maxID = id;
             }
         } catch (Exception e) {
-            // Ignore parsing issues, return maxID + 1
+            // ignore
         }
         return String.valueOf(maxID + 1);
     }
 
+    private void uploadImage() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and JPG Images", "png", "jpg");
+        fileChooser.setFileFilter(filter);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            String fileName = selectedFile.getName().toLowerCase();
+
+            if (!fileName.endsWith(".png") && !fileName.endsWith(".jpg")) {
+                JOptionPane.showMessageDialog(this, "Only PNG or JPG images are allowed!");
+                return;
+            }
+
+            File folder = new File("images");
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            File destination = new File("images/" + selectedFile.getName());
+
+            try {
+                java.nio.file.Files.copy(
+                        selectedFile.toPath(),
+                        destination.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+
+                imagePath = destination.getPath();
+                ImageIcon icon = new ImageIcon(imagePath);
+                Image scaledImage = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                imageLabel.setIcon(new ImageIcon(scaledImage));
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Failed to save image: " + e.getMessage());
+            }
+        }
+    }
 }
