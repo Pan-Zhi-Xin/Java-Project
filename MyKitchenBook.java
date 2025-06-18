@@ -1,3 +1,4 @@
+// GROUP 2
 // Personal Digital Recipe Management System
 // 1221207256 PAN ZHI XIN
 // 1221208105 KONG LEE CHING
@@ -49,7 +50,7 @@ public class MyKitchenBook extends JFrame implements ActionListener
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Font title = new Font ("Roboto", Font.BOLD, 35);
+        Font title = new Font ("Roboto", Font.BOLD, 45);
         Font label = new Font ("Roboto",Font.BOLD, 20);
         Font textField = new Font ("Roboto", Font.PLAIN, 15);
         Font button = new Font ("Roboto", Font.BOLD, 13);
@@ -66,8 +67,10 @@ public class MyKitchenBook extends JFrame implements ActionListener
         messageLabel = new JLabel("");
 
         JPanel titlePanel = new JPanel();
-        titlePanel.setPreferredSize(new Dimension(400, 200));
+        titlePanel.setPreferredSize(new Dimension(400, 80));
         titlePanel.add(titleLabel);
+        titlePanel.setBackground(new Color(29, 61, 89));
+        titleLabel.setForeground(Color.WHITE);
 
         JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         emailPanel.add(emailLabel);
@@ -87,17 +90,22 @@ public class MyKitchenBook extends JFrame implements ActionListener
         
         JPanel loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(400, 400));
+        loginPanel.setBorder(new javax.swing.border.EmptyBorder(80, 0, 0, 0));
         loginPanel.add(emailPanel);
         loginPanel.add(passPanel);
         
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,40,10));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,100,10));
         buttonPanel.add(signUpBtn);
         signUpBtn.setFont(button);
         signUpBtn.setPreferredSize(new Dimension(150, 40));
+        signUpBtn.setForeground(Color.WHITE);
+        signUpBtn.setBackground(new Color(73,117,160));
         buttonPanel.add(loginBtn);
         loginBtn.setFont(button);
         loginBtn.setPreferredSize(new Dimension(150, 40));
+        loginBtn.setForeground(Color.WHITE);
+        loginBtn.setBackground(new Color(73,117,160));
         
         JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
         messageLabel.setFont(message);
