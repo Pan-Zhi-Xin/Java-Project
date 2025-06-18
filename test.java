@@ -21,16 +21,20 @@ import javax.swing.JTextField;
 public class test extends JFrame {
     private JLabel title1, name, prepareTime, difficultyLevel, category, image, step, description;
     private JTextField tfName, tfTime;
-    private JPanel p1,p2;
+    private JPanel basicInfoPanel, ingredientPanel, stepPanel, buttonPanel;
     private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
     private JScrollPane spIngredientName;
-    private JButton bImage, bSave, bAdd, bSub;
-    private String memberID;
+    private JButton bImage, bSave, bAdd, bSub, bCancel;
+    private String memberID, memberName, categoryName;
+    private int categoryID;
 
-    // Constructor that accepts memberID
-    public test(String memberID) {
+    public test(String memberID, String memberName, int categoryID, String categoryName) {
+        this.memberID = memberID;
+        this.memberName = memberName;
+        this.categoryID = categoryID;
+        this.categoryName = categoryName;
         this.memberID = memberID;
         setTitle("My Kitchen Book - Add Recipe");
         setSize(1000, 700);
@@ -38,33 +42,33 @@ public class test extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // p1 is for basic info
-        p1 = new JPanel();
-        p1.setLayout(new GridLayout(6, 2)); 
+        // basicInfoPanel is for basic info part
+        basicInfoPanel = new JPanel();
+        basicInfoPanel.setLayout(new GridLayout(6, 2)); 
 
-        p1.add(new JLabel("Name:"));
+        basicInfoPanel.add(new JLabel("Name:"));
         tfName = new JTextField(20);
-        p1.add(tfName);
+        basicInfoPanel.add(tfName);
 
-        p1.add(new JLabel("Prepare Time:"));
+        basicInfoPanel.add(new JLabel("Prepare Time:"));
         tfTime = new JTextField(20);
-        p1.add(tfTime);
+        basicInfoPanel.add(tfTime);
 
-        p1.add(new JLabel("Difficulty (1-5):"));
+        basicInfoPanel.add(new JLabel("Difficulty (1-5):"));
         String[] difficulty = {"1", "2", "3", "4", "5"};
         cDifficulty = new JComboBox(difficulty); 
-        p1.add(cDifficulty);
+        basicInfoPanel.add(cDifficulty);
 
-        p1.add(new JLabel("Category:"));
+        basicInfoPanel.add(new JLabel("Category:"));
         cCategory = new JComboBox(); 
         loadCategories();
-        p1.add(cCategory);
+        basicInfoPanel.add(cCategory);
 
-        p1.add(new JLabel("Description:"));
+        basicInfoPanel.add(new JLabel("Description:"));
         taDescription = new JTextArea(3, 20);
-        p1.add(new JScrollPane(taDescription));
+        basicInfoPanel.add(new JScrollPane(taDescription));
 
-        add(p1, BorderLayout.NORTH);
+        add(basicInfoPanel, BorderLayout.NORTH);
 
         // p2 is for ingredients table, step and save button
         String[][] data = {{"Egg", "2"}, {"Carrot", "1"}};
@@ -72,22 +76,35 @@ public class test extends JFrame {
         tIngredient = new JTable(data, columnNames);
         add(new JScrollPane(tIngredient), BorderLayout.CENTER);
 
-        p2 = new JPanel();
-        p2.setLayout(new BorderLayout());
-        // sub1
-        JPanel stepPanel = new JPanel();
+        ingredientPanel = new JPanel();
+        ingredientPanel.setLayout(new BorderLayout());
+        // stepPanel is the sub panel for ingredientPanel
+        stepPanel = new JPanel();
         stepPanel.setLayout(new BorderLayout());
         stepPanel.add(new JLabel("Steps:"), BorderLayout.NORTH);
         taStep = new JTextArea(5, 20);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
 
-        p2.add(stepPanel, BorderLayout.CENTER);
+        ingredientPanel.add(stepPanel, BorderLayout.CENTER);
 
         bSave = new JButton("Save Recipe");
         bSave.addActionListener(e -> saveRecipeToFile());
-        p2.add(bSave, BorderLayout.SOUTH);
+        ingredientPanel.add(bSave, BorderLayout.SOUTH);      
+        
+        bCancel = new JButton("Cancel");
+        bCancel.addActionListener(e -> {
+            new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
+            this.dispose(); // close current frame
+        });
+        // buttonPanel is the sub panel for ingredientPanel
+        buttonPanel = new JPanel();
+        buttonPanel.add(bSave);
+        buttonPanel.add(bCancel);
 
-        add(p2, BorderLayout.SOUTH);
+        ingredientPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(ingredientPanel, BorderLayout.SOUTH);
+
 
         setVisible(true);
     }
