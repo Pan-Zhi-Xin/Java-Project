@@ -129,7 +129,7 @@ public class WelcomePage extends JFrame {
                 //set up for the dialog
                 JDialog addDialog = new JDialog();
                 addDialog.setTitle("Add New Category");
-                addDialog.setSize(300,200);
+                addDialog.setSize(300,150);
                 addDialog.setLayout(new BorderLayout());
                 addDialog.setLocationRelativeTo(WelcomePage.this);
                 
@@ -286,7 +286,7 @@ public class WelcomePage extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     JDialog editDialog = new JDialog();
                     editDialog.setTitle("Edit Category");
-                    editDialog.setSize(300,200);
+                    editDialog.setSize(300,150);
                     editDialog.setLayout(new BorderLayout());
                     editDialog.setLocationRelativeTo(WelcomePage.this);
                     
