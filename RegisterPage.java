@@ -32,7 +32,7 @@ public class RegisterPage extends JFrame implements ActionListener{
     private JLabel titleLabel,nameLabel,emailLabel,passwordLabel,confPasswordLabel,messageLabel;
     private JTextField nameTf,emailTf;
     private JPasswordField passwordTf,confPasswordTf;
-    private JButton cancelBtn,signUpBtn;
+    private JButton cancelBtn,signUpBtn,clearBtn;
     
     public RegisterPage() {
         setSize(1000, 700);
@@ -40,12 +40,12 @@ public class RegisterPage extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
-        Font title = new Font ("Roboto", Font.BOLD, 35);
+        Font title = new Font ("Roboto", Font.BOLD, 45);
         Font label = new Font ("Roboto",Font.BOLD, 20);
         Font textField = new Font ("Roboto", Font.PLAIN, 15);
         Font button = new Font ("Roboto", Font.BOLD, 13);
         Font message = new Font ("Roboto", Font.BOLD, 15);
-        titleLabel = new JLabel("Register");
+        titleLabel = new JLabel("REGISTER");
         titleLabel.setFont(title);
         
         nameLabel = new JLabel("Username:");
@@ -59,11 +59,26 @@ public class RegisterPage extends JFrame implements ActionListener{
         confPasswordTf = new JPasswordField();
         cancelBtn = new JButton("CANCEL");
         signUpBtn = new JButton("REGISTER");
+        clearBtn = new JButton("CLEAR");
         messageLabel = new JLabel("");
 
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setPreferredSize(new Dimension(400, 150));
+
+        // Title label in center
         JPanel titlePanel = new JPanel();
-        titlePanel.setPreferredSize(new Dimension(400, 150));
         titlePanel.add(titleLabel);
+        titleLabel.setForeground(Color.WHITE);
+        titlePanel.setBackground(new Color(29, 61, 89));
+        topPanel.add(titlePanel, BorderLayout.CENTER);
+
+        // Clear button in east (bottom right)
+        JPanel clearButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        clearBtn.setFont(button);
+        clearBtn.setPreferredSize(new Dimension(150, 40));
+        clearButtonPanel.setBorder(new javax.swing.border.EmptyBorder(10, 0, 10, 0));
+        clearButtonPanel.add(clearBtn);
+        topPanel.add(clearButtonPanel, BorderLayout.SOUTH);
         
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(nameLabel);
@@ -98,22 +113,25 @@ public class RegisterPage extends JFrame implements ActionListener{
         confPasswordTf.setPreferredSize(new Dimension(400, 50));
         
         JPanel registerPanel = new JPanel();
-        registerPanel.setPreferredSize(new Dimension(400, 400));
+        registerPanel.setPreferredSize(new Dimension(400, 300));
         registerPanel.add(namePanel);
         registerPanel.add(emailPanel);
         registerPanel.add(passPanel);
         registerPanel.add(confPassPanel);
-        
-        
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,40,10));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,100,10));
         buttonPanel.add(cancelBtn);
         cancelBtn.setFont(button);
         cancelBtn.setPreferredSize(new Dimension(150, 40));
+        cancelBtn.setForeground(Color.WHITE);
+        cancelBtn.setBackground(new Color(73,117,160));
         buttonPanel.add(signUpBtn);
         signUpBtn.setFont(button);
         signUpBtn.setPreferredSize(new Dimension(150, 40));
+        signUpBtn.setForeground(Color.WHITE);
+        signUpBtn.setBackground(new Color(73,117,160));
+        
         
         JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
         messageLabel.setFont(message);
@@ -122,12 +140,13 @@ public class RegisterPage extends JFrame implements ActionListener{
         bottomPanel.add(buttonPanel);
         
 
-        add(titlePanel, BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
         add(registerPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
         signUpBtn.addActionListener(this);
         cancelBtn.addActionListener(this);
+        clearBtn.addActionListener(this);
     }
    
     private boolean isExistName(String input) {
@@ -215,6 +234,13 @@ public class RegisterPage extends JFrame implements ActionListener{
 
         // Return if the password matched the ReGex
         return p.matcher(password).matches();
+    }
+    void clearForm()
+    {
+        nameTf.setText("");
+        emailTf.setText("");
+        passwordTf.setText("");
+        confPasswordTf.setText("");
     }
 
     @Override
@@ -315,10 +341,15 @@ public class RegisterPage extends JFrame implements ActionListener{
                 this.dispose();
             }
         }
+        else if (e.getSource() == clearBtn)
+        {
+            clearForm();
+        }
         else if (e.getSource() == cancelBtn)
         {
             new MyKitchenBook();
             this.dispose();
         }
+
     }
 }
