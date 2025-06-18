@@ -1,17 +1,19 @@
 package com.mycompany.java_project;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -40,11 +42,32 @@ class Categories{
     public String getCategoryName(){ return categoryName;}
 }//end of class Categories
 
+//Recipes class to save recipe id, name, and image file path
+class Recipes{
+    //private instance data
+    private int recipeID;
+    private String recipeName;
+    private int categoryID;
+    private String imagePath;
+    
+    //constructor to set instance data
+    public Recipes(int recipeID, String recipeName, int categoryID, String imagePath){
+        this.recipeID = recipeID;
+        this.recipeName = recipeName;
+        this.categoryID = categoryID;
+        this.imagePath = imagePath;
+    }
+    public int getRecipeID(){return recipeID;}
+    public String getRecipeName(){return recipeName;}
+    public int getCategoryID(){return categoryID;}
+    public String getImagePath(){return imagePath;}
+}//end of class Recipes
+
 
 //public class to display the Welcome Page after successfully login
 public class WelcomePage extends JFrame {
     private JScrollPane scrollCategory;
-    private JButton logout, addCategory;
+    private JButton logout, addCategory, editCategory, deleteCategory;
     private JPanel topBar, buttonPanel, welcomePagePanel;
     private JLabel message;
     private Categories[] category;
@@ -97,7 +120,7 @@ public class WelcomePage extends JFrame {
                 // The panel to be displayed
                 JPanel addPanel = new JPanel(new BorderLayout());
                 JLabel addLabel = new JLabel("Enter new Category: ");
-                JTextField addTextField = new JTextField("exp: Burgers");
+                JTextField addTextField = new JTextField();
                 addPanel.setBorder(new EmptyBorder(10,10,10,10));
                 addPanel.add(addLabel,BorderLayout.NORTH);
                 addPanel.add(addTextField,BorderLayout.CENTER);
@@ -202,15 +225,182 @@ public class WelcomePage extends JFrame {
             goToRecipeDisplay.setContentAreaFilled(false);
             goToRecipeDisplay.setOpaque(true);
             goToRecipeDisplay.setPreferredSize(new Dimension(500, 50));
-
+            //select a category to view the filtered recipe
             goToRecipeDisplay.addActionListener(e -> {
                 // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
                 new RecipeDisplayPage(memberID,memberName,category[index].getCategoryID(), category[index].getCategoryName());  
                 this.dispose();
             });
+            
+            //the edit category button
+            editCategory = new JButton("🖋️");
+            editCategory.setFont(new Font("Roboto", Font.BOLD, 24));
+            editCategory.setForeground(Color.WHITE);
+            editCategory.setBackground(new Color(73, 117, 160));
+            editCategory.setFocusPainted(false); // remove dotted focus border
+            editCategory.setBorderPainted(false); // remove button border
+            editCategory.setContentAreaFilled(false); // remove fill
+            editCategory.setOpaque(true); // still show background
+            editCategory.addActionListener(new ActionListener() {
+            @Override
+            // display the edit category pop-up form (JDialog)
+            public void actionPerformed(ActionEvent e){
+                JDialog editDialog = new JDialog();
+                editDialog.setTitle("Edit Category");
+                editDialog.setSize(300,200);
+                editDialog.setLayout(new BorderLayout());
+                editDialog.setLocationRelativeTo(WelcomePage.this);
+                
+                // The panel to be displayed
+                JPanel editPanel = new JPanel(new BorderLayout());
+                JLabel editLabel = new JLabel("Editing Category: " + category[index].getCategoryName());
+                JTextField editTextField = new JTextField(category[index].getCategoryName());
+                editPanel.setBorder(new EmptyBorder(10,10,10,10));
+                editPanel.add(editLabel,BorderLayout.NORTH);
+                editPanel.add(editTextField,BorderLayout.CENTER);
+                
+                //edit button to submit the edited category input
+                JButton confirmEdit = new JButton("🖋 Edit");
+                confirmEdit.addActionListener(add -> {
+                    String editCategoryName  = editTextField.getText().trim();
+                    boolean exist = false;
+                    // check if the category already exists
+                    for(int i=0;i<category.length;i++){
+                        if(category[i].getCategoryName().equalsIgnoreCase(editCategoryName )){
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if(editCategoryName .isEmpty()){
+                        JOptionPane.showMessageDialog(editDialog, "Category name cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }else if(exist){
+                        JOptionPane.showMessageDialog(editDialog, editCategoryName  + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }else{
+                        //try to add the new category into memberID_category.txt
+                        try{
+                            File editCategory = new File(memberID+"_category.txt");
+                            BufferedReader reader = new BufferedReader(new FileReader(editCategory));
+                            StringBuilder updatedContent = new StringBuilder();
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                String[] parts = line.split(",", 2);
+                                int id = Integer.parseInt(parts[0].trim());
+
+                                if (id == category[index].getCategoryID()) {
+                                    updatedContent.append(id).append(",").append(editCategoryName ).append("\n");
+                                } else {
+                                    updatedContent.append(line).append("\n");
+                                }
+                            }
+
+                            reader.close();
+
+                            FileWriter writer = new FileWriter(editCategory, false); // overwrite mode
+                            writer.write(updatedContent.toString());
+                            writer.close();
+
+                            JOptionPane.showMessageDialog(editDialog, "Category name updated successfully!");
+                            editDialog.dispose();
+                            new WelcomePage(memberID, memberName);
+                            WelcomePage.this.dispose();
+                        }catch(IOException ex){
+                            JOptionPane.showMessageDialog(editDialog, "Error editing category: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }      
+                    }
+                });
+                
+                //combine the components into the edit category JDialog
+                editDialog.add(editPanel,BorderLayout.CENTER);
+                editDialog.add(confirmEdit,BorderLayout.SOUTH);
+                editDialog.setVisible(true);
+            }
+        });
+            
+            //the delete category button
+            deleteCategory = new JButton("🗑️");
+            deleteCategory.setFont(new Font("Roboto", Font.BOLD, 24));
+            deleteCategory.setForeground(Color.WHITE);
+            deleteCategory.setBackground(new Color(73, 117, 160));
+            deleteCategory.setFocusPainted(false); // remove dotted focus border
+            deleteCategory.setBorderPainted(false); // remove button border
+            deleteCategory.setContentAreaFilled(false); // remove fill
+            deleteCategory.setOpaque(true); // still show background
+            deleteCategory.addActionListener(e ->{
+                int confirm = JOptionPane.showConfirmDialog(
+                        WelcomePage.this,
+                        "Remove "+ category[index].getCategoryName() + " ?",
+                        "Yes",
+                        JOptionPane.YES_NO_OPTION
+                );
+                
+                if(confirm == JOptionPane.YES_OPTION){
+                    try {
+                        //Change the recipe with the deleted category to "default" category
+                        File recipeFile = new File(memberID + "_recipe.txt");
+                        
+                        if(recipeFile.exists()){
+                            List<String>updatedRecipe = new ArrayList<>();
+                            try( BufferedReader readRecipeFile = new BufferedReader(new FileReader(recipeFile))){
+                                String line;
+                                while((line = readRecipeFile.readLine())!=null){
+                                    String[] parts = line.split("\\|", 9);
+                                    int categoryID = Integer.parseInt(parts[6].trim());
+                                    if(categoryID == category[index].getCategoryID()){
+                                        parts[6]="1";
+                                        line = String.join("|",parts);
+                                    }
+                                    updatedRecipe.add(line);
+                                }
+                            }
+                            //write the updated recipes into memberID_recipe.txt
+                            try(FileWriter writer = new FileWriter(recipeFile,false)){
+                                writer.write(String.join("\n",updatedRecipe));
+                            }
+                        }
+                        //delete the selected category from category file
+                        try{
+                            //delete the category
+                            File deleteCategory = new File(memberID + "_category.txt");
+                            BufferedReader reader = new BufferedReader(new FileReader(deleteCategory));
+                            StringBuilder updatedCategory = new StringBuilder();
+                            String line;
+
+                            while((line = reader.readLine())!=null){
+                                String[] parts = line.split(",",2);
+                                int id = Integer.parseInt(parts[0].trim());
+                                if(id != category[index].getCategoryID()){
+                                    updatedCategory.append(line).append("\n");
+                                }
+                            }
+                            reader.close();
+
+                            FileWriter writer = new FileWriter(deleteCategory,false);
+                            writer.write(updatedCategory.toString());
+                            writer.close();
+
+                            //Refresh the page to show the latest category content
+                            new WelcomePage(memberID, memberName);
+                            WelcomePage.this.dispose();
+                        }catch (IOException ex) {
+                            JOptionPane.showMessageDialog(WelcomePage.this, "Error deleting category: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }catch (IOException ex) {
+                        JOptionPane.showMessageDialog(
+                            WelcomePage.this,
+                            "Error deleting category!"+ex.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                }
+            });
+            
             JPanel buttonWrapper = new JPanel();
+            buttonWrapper.setBackground(new Color(73, 117, 160));
             buttonWrapper.setOpaque(false); // to keep background consistent
             buttonWrapper.add(goToRecipeDisplay);
+            buttonWrapper.add(editCategory);
+            buttonWrapper.add(deleteCategory);
 
             buttonPanel.add(buttonWrapper);
         }

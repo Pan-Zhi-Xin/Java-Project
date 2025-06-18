@@ -20,26 +20,26 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.BoxLayout;
 
-
 //Recipes class to save recipe id, name, and image file path
 class Recipes{
     //private instance data
     private int recipeID;
     private String recipeName;
-    private String imagepath;
+    private int categoryID;
+    private String imagePath;
     
     //constructor to set instance data
-    public Recipes(int recipeID, String recipeName, String imagepath){
+    public Recipes(int recipeID, String recipeName, int categoryID, String imagePath){
         this.recipeID = recipeID;
         this.recipeName = recipeName;
-        this.imagepath = imagepath;
+        this.categoryID = categoryID;
+        this.imagePath = imagePath;
     }
     public int getRecipeID(){return recipeID;}
     public String getRecipeName(){return recipeName;}
-    public String getRecipeImage(){return imagepath;}
-
+    public int getCategoryID(){return categoryID;}
+    public String getImagePath(){return imagePath;}
 }//end of class Recipes
-
 
 //public class to display the Welcome Page after successfully login
 public class RecipeDisplayPage extends JFrame {
@@ -104,15 +104,16 @@ public class RecipeDisplayPage extends JFrame {
             List<Recipes> filteredRecipe = new ArrayList<>();
             String line;
 
+            // In the while loop where you read recipes:
             while ((line = readRecipeFile.readLine()) != null) {
-                String[] parts = line.split("\\|", 9);  // Correct delimiter
+                String[] parts = line.split("\\|", 9);
                 int id = Integer.parseInt(parts[0].trim());
                 String name = parts[1].trim();
                 String imagepath = parts[5].trim();
                 int category = Integer.parseInt(parts[6].trim());
 
                 if (category == categoryID) {
-                    filteredRecipe.add(new Recipes(id, name, imagepath));
+                    filteredRecipe.add(new Recipes(id, name, category, imagepath));
                 }
             }
             readRecipeFile.close();
@@ -137,7 +138,7 @@ public class RecipeDisplayPage extends JFrame {
         //use a for loop to setup the category button
         for(int i=0;i<recipe.length;i++){
             //recipe image display
-            ImageIcon originalIcon = new ImageIcon(recipe[i].getRecipeImage());
+            ImageIcon originalIcon = new ImageIcon(recipe[i].getImagePath());
             Image scaledImage = originalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
             JLabel imageSpace = new JLabel(new ImageIcon(scaledImage));
             
