@@ -33,7 +33,7 @@ public class test extends JFrame {
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
     private JScrollPane spIngredientName, spIngredientTable;
-    private JButton bImage, bSave, bAdd, bSub, bCancel;
+    private JButton bImage, bSave, bAdd, bSub, bCancel, bShoppingList;
     private String imagePath = "src/images/default.png";
     private String memberID, memberName, categoryName;
     private int categoryID;
@@ -136,14 +136,17 @@ public class test extends JFrame {
         bSave = new JButton("Save Recipe");
         bSave.addActionListener(e -> saveRecipeToFile());
         bCancel = new JButton("Cancel");
+        bShoppingList = new JButton("Shopping List");
         bCancel.addActionListener(e -> {
             new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
             this.dispose();
         });
         buttonPanel.add(bSave);
         buttonPanel.add(bCancel);
+        buttonPanel.add(bShoppingList);
         mainPanel.add(buttonPanel);
 
+        
         // Wrap everything in scroll pane
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         add(scrollPane);
