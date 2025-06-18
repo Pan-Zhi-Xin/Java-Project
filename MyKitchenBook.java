@@ -4,6 +4,7 @@
 // 1221208105 KONG LEE CHING
 // 1221208223 LOY YU XUAN
 
+package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
