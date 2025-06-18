@@ -1,30 +1,39 @@
+//declare package
 package com.mycompany.java_project;
-import java.awt.Color;
+
+//library used
+//for data structure
+import java.util.List;
+import java.util.ArrayList;
+//for GUI
+import java.awt.Font;                   //for font customization
+import java.awt.Color;                  //for colour customization
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
-import java.io.BufferedReader;
+import javax.swing.JFrame;              //to enable JFrame
+import javax.swing.JLabel;              //to enable JLabel
+import javax.swing.JPanel;              //to enable JPanel
+import javax.swing.JButton;             //to enable JButton
+import javax.swing.JDialog;             //to enable JDialog
+import javax.swing.JTextField;          //to enable JTextField
+import javax.swing.JOptionPane;         //to enable JOptionPane
+import javax.swing.JScrollPane;         //to enable JScrollPane
+import javax.swing.border.EmptyBorder;
+//for layouts
+import java.awt.GridLayout;             //to enable gridlayout
+import java.awt.BorderLayout;           //to enable borderlayout
+//for File I/O
 import java.io.File;
-import java.io.FileWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+//for event handling
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
+//for error handling
+import java.io.FileNotFoundException;   //to detect FileNotFoundException
+import java.io.IOException;             //to detect IOException
 
-//Categories class to save category id and name
+//Categories class
 class Categories {
     //private instance data
     private int categoryID;
@@ -36,13 +45,14 @@ class Categories {
         this.categoryName = categoryName;
     }
     
-    //accessor function for categoryID
+    //accessor functions
     public int getCategoryID() { return categoryID; }
-    //accessor function for categoryName
     public String getCategoryName() { return categoryName; }
+
 }//end of class Categories
 
-//Recipes class to save recipe id, name, and image file path
+
+//Recipes class
 class Recipes {
     //private instance data
     private int recipeID;
@@ -57,19 +67,24 @@ class Recipes {
         this.categoryID = categoryID;
         this.imagePath = imagePath;
     }
+
+    //accessor functions
     public int getRecipeID() { return recipeID; }
     public String getRecipeName() { return recipeName; }
     public int getCategoryID() { return categoryID; }
     public String getImagePath() { return imagePath; }
+
 }//end of class Recipes
 
 
 //public class to display the Welcome Page after successfully login
 public class WelcomePage extends JFrame {
+    //declared JComponents
     private JScrollPane scrollCategory;
     private JButton logout, addCategory, editCategory, deleteCategory;
     private JPanel topBar, buttonPanel, welcomePagePanel;
     private JLabel message;
+    //declared array of Categories object
     private Categories[] category;
     
     //constructor to display the GUI
@@ -85,7 +100,7 @@ public class WelcomePage extends JFrame {
         logout.setContentAreaFilled(false); // remove fill
         logout.setOpaque(true); // still show background
         logout.addActionListener(e -> {
-            // return to landing page and log out
+            // return to landing page (logout)
             new MyKitchenBook();  
             this.dispose();
         });
@@ -103,21 +118,22 @@ public class WelcomePage extends JFrame {
         addCategory.setFont(new Font("Roboto", Font.BOLD, 32));
         addCategory.setForeground(Color.WHITE);
         addCategory.setBackground(new Color(29, 61, 89));
-        addCategory.setFocusPainted(false); // remove dotted focus border
-        addCategory.setBorderPainted(false); // remove button border
-        addCategory.setContentAreaFilled(false); // remove fill
-        addCategory.setOpaque(true); // still show background
+        addCategory.setFocusPainted(false);
+        addCategory.setBorderPainted(false);
+        addCategory.setContentAreaFilled(false);
+        addCategory.setOpaque(true);
         addCategory.addActionListener(new ActionListener() {
             @Override
             // display the add category pop-up form (JDialog)
             public void actionPerformed(ActionEvent e) {
+                //set up for the dialog
                 JDialog addDialog = new JDialog();
                 addDialog.setTitle("Add New Category");
                 addDialog.setSize(300,200);
                 addDialog.setLayout(new BorderLayout());
                 addDialog.setLocationRelativeTo(WelcomePage.this);
                 
-                // The panel to be displayed
+                //set up the panel for user to enter new category
                 JPanel addPanel = new JPanel(new BorderLayout());
                 JLabel addLabel = new JLabel("Enter new Category: ");
                 JTextField addTextField = new JTextField();
@@ -130,44 +146,62 @@ public class WelcomePage extends JFrame {
                 confirmAdd.addActionListener(add -> {
                     String newCategoryName = addTextField.getText().trim();
                     boolean exist = false;
-                    // check if the category already exists
+                    //check if the category already exists (linear search)
                     for(int i=0;i<category.length;i++) {
                         if(category[i].getCategoryName().equalsIgnoreCase(newCategoryName)) {
                             exist = true;
                             break;
                         }
                     }
+                    //handle if category input is empty
                     if(newCategoryName.isEmpty()) {
                         JOptionPane.showMessageDialog(addDialog, "Category name cannot be empty!", "Error", JOptionPane.ERROR_MESSAGE);
+                    //handle if category already exists
                     } else if(exist) {
                         JOptionPane.showMessageDialog(addDialog, newCategoryName + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                    //if no error, add the new category into memberID_category.txt
                     } else {
-                        //try to add the new category into memberID_category.txt
                         try {
+                            //get the auto-generated categoryID
                             int newCategoryID = getNextCategoryID();
-                            FileWriter writeCategory = new FileWriter(memberID+"_category.txt",true);//append mode
+
+                            //open the txt file in append mode (so it won't overwrite the whole file)
+                            FileWriter writeCategory = new FileWriter(memberID+"_category.txt",true);
+
+                            //write in format (categoryID,categoryName\n)
                             writeCategory.write(newCategoryID + "," + newCategoryName + "\n");
+                            
+                            //close the txt file after writing
                             writeCategory.close();
+                            
+                            //message to notify users category added and destroy the JDialog
                             JOptionPane.showMessageDialog(addDialog, newCategoryName + " added successfully!");
                             addDialog.dispose();
-                            //refresh the page to provide the latest category content
+                            
+                            //refresh the page to provide the latest category update
                             new WelcomePage(memberID, memberName);
                             WelcomePage.this.dispose();
-                        } catch(IOException ex) {
+                        }
+                        //handle if failed to found the file
+                        catch(FileNotFoundException ex){
+                            JOptionPane.showMessageDialog(addDialog, "Category file not found" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        //handle if there's any error during I/O
+                        catch(IOException ex) {
                             JOptionPane.showMessageDialog(addDialog, "Error adding category: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }      
                     }
                 });
                 
-                //combine the components for add category pop-up form
-                addDialog.add(addPanel,BorderLayout.CENTER);
-                addDialog.add(confirmAdd,BorderLayout.SOUTH);
-                //ensure the dialog can be seen
+                //combine the components for add category pop-up JDialog
+                addDialog.add(addPanel,BorderLayout.CENTER); //the text field
+                addDialog.add(confirmAdd,BorderLayout.SOUTH); //the add button
+                //ensure the JDialog can be seen
                 addDialog.setVisible(true);
             }
         });
         
-        //combine three of them to craete the tab bar on top
+        //combine logout button, welcome message & add button to craete the tab
         topBar = new JPanel(new BorderLayout());
         topBar.add(logout, BorderLayout.WEST);
         topBar.add(message, BorderLayout.CENTER);
@@ -175,19 +209,24 @@ public class WelcomePage extends JFrame {
         
         //open the memberID_category.txt to get all the category
         try {
+            //declare a temporary Categories object to store the data
             Categories temp = new Categories(0,"");
+            
+            //open and read memberID_category.txt
             File file = new File(memberID + "_category.txt");
             BufferedReader readCategoryFile = new BufferedReader (new FileReader(file));
             
-            //count the total of lines in file
+            //count the lines in file to get the total of categories
             int categoryCount = 0;
             while(readCategoryFile.readLine()!=null) {
                 categoryCount++;
             }
             readCategoryFile.close();
 
-            //create an array to store the category
+            //create an array to store the categories
             category = new Categories[categoryCount];
+            
+            //read the memberID_category.txt again
             readCategoryFile = new BufferedReader(new FileReader(file));
             String line;
             //use for loop to save the category into an array of Category object
@@ -415,10 +454,12 @@ public class WelcomePage extends JFrame {
         setLocationRelativeTo(null); // center on screen
     }
     
-    //function to auto-generate the category ID
+    //function to auto-generate the category ID (to avoid manual typing in and cause redundancy)
     public int getNextCategoryID() {
-        //read till the end of the memberID_category.txt to get the last categoryID
+        //if there's no content inside category[], just return 1
         if(category.length == 0) { return 1; }
+
+        //if there's content, return the last categiryID + 1
         int latestCategoryID = category[category.length-1].getCategoryID();
         return latestCategoryID+1;
     }
