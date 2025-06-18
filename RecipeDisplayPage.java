@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.BoxLayout;
+import javax.swing.JScrollPane;
 
 //Recipes class to save recipe id, name, and image file path
 class Recipes{
@@ -43,11 +44,12 @@ class Recipes{
 
 //public class to display the Welcome Page after successfully login
 public class RecipeDisplayPage extends JFrame {
-    private JButton logout, addRecipe;
+    private JButton logout, addRecipe, goToRecipeDetail;
     private JPanel topBar, buttonPanel, welcomePagePanel;
     private JLabel message;
     private Recipes[] recipe;
     private ImageIcon image;
+    private JScrollPane scrollRecipe;
     
     //constructor to display the GUI
     public RecipeDisplayPage(String memberID, String memberName, int categoryID, String categoryName) {
@@ -129,21 +131,21 @@ public class RecipeDisplayPage extends JFrame {
             recipe = new Recipes[0];
         }
 
-        
+        //mainPanel setup
         welcomePagePanel = new JPanel(new BorderLayout());
         welcomePagePanel.add(topBar, BorderLayout.NORTH);
-        buttonPanel = new JPanel(new GridLayout(0,4,30,30));
+        buttonPanel = new JPanel(new GridLayout(0,4,40,40));
         buttonPanel.setBorder(new EmptyBorder(30,10,20,20));
         
-        //use a for loop to setup the category button
+        //for loop to set recipe image and name into a recipe card
         for(int i=0;i<recipe.length;i++){
             //recipe image display
             ImageIcon originalIcon = new ImageIcon(recipe[i].getImagePath());
-            Image scaledImage = originalIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(200, 150, Image.SCALE_SMOOTH);
             JLabel imageSpace = new JLabel(new ImageIcon(scaledImage));
             
-            //recipe name display
-            JButton goToRecipeDetail = new JButton(recipe[i].getRecipeName());
+            //recipe name display and button to display the recipe details
+            goToRecipeDetail = new JButton(recipe[i].getRecipeName());
             goToRecipeDetail.setFont(new Font("Roboto", Font.BOLD, 24));
             goToRecipeDetail.setBackground(new Color(73, 117, 160));
             goToRecipeDetail.setForeground(Color.WHITE);
@@ -151,6 +153,8 @@ public class RecipeDisplayPage extends JFrame {
             goToRecipeDetail.setContentAreaFilled(false);
             goToRecipeDetail.setOpaque(true);
             goToRecipeDetail.setPreferredSize(new Dimension(500, 50));
+            goToRecipeDetail.setMaximumSize(new Dimension(200, 40));
+            goToRecipeDetail.setMinimumSize(new Dimension(200, 40));
             
             Recipes currentRecipe = recipe[i];
             goToRecipeDetail.addActionListener(e -> {
@@ -158,17 +162,27 @@ public class RecipeDisplayPage extends JFrame {
                 new RecipeDetailsPage(memberID, memberName, currentRecipe, categoryID, categoryName);
                 this.dispose();
             });
-            JPanel buttonWrapper = new JPanel();
-            buttonWrapper.setLayout(new BoxLayout(buttonWrapper,BoxLayout.Y_AXIS));
-            buttonWrapper.setOpaque(false); // to keep background consistent
-            buttonWrapper.setPreferredSize(new Dimension(200, 220)); // Optional: uniform size
-            buttonWrapper.add(imageSpace);
-            buttonWrapper.add(goToRecipeDetail);
+            
+            //combine image and name button into a card
+            JPanel recipeCard = new JPanel();
+            recipeCard.setLayout(new BoxLayout(recipeCard, BoxLayout.Y_AXIS));
+            recipeCard.setPreferredSize(new Dimension(200, 200));
+            recipeCard.setMaximumSize(new Dimension(200, 200));
+            recipeCard.setMinimumSize(new Dimension(200, 200));
+            recipeCard.setAlignmentY(TOP_ALIGNMENT);
+            recipeCard.setAlignmentX(CENTER_ALIGNMENT);
 
-            buttonPanel.add(buttonWrapper);
+            imageSpace.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+            goToRecipeDetail.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+            recipeCard.add(imageSpace);
+            recipeCard.add(goToRecipeDetail);
+            
+            //combine the cards into button panel that display all filtered recipe
+            buttonPanel.add(recipeCard);
         }
-        
-        welcomePagePanel.add(buttonPanel, BorderLayout.CENTER);
+        //add the button panel to the JScrollPane to able to scroll the recipe cards
+        scrollRecipe = new JScrollPane(buttonPanel);
+        welcomePagePanel.add(scrollRecipe, BorderLayout.CENTER);
         add(welcomePagePanel);
 
         setVisible(true);
