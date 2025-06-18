@@ -34,7 +34,7 @@ public class test extends JFrame {
     private JTable tIngredient;
     private JScrollPane spIngredientName, spIngredientTable;
     private JButton bImage, bSave, bAdd, bSub, bCancel;
-    private String imagePath = "images/default.jpg";
+    private String imagePath = "src/images/default.png";
     private String memberID, memberName, categoryName;
     private int categoryID;
 
@@ -222,7 +222,7 @@ public class test extends JFrame {
 
     private void uploadImage() {
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and JPG Images", "png", "jpg");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and JPG Images", "png", "jpg","jpeg");
         fileChooser.setFileFilter(filter);
         fileChooser.setAcceptAllFileFilterUsed(false);
 
@@ -232,17 +232,17 @@ public class test extends JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             String fileName = selectedFile.getName().toLowerCase();
 
-            if (!fileName.endsWith(".png") && !fileName.endsWith(".jpg")) {
-                JOptionPane.showMessageDialog(this, "Only PNG or JPG images are allowed!");
+            if (!fileName.endsWith(".png") && !fileName.endsWith(".jpg") && !fileName.endsWith(".jpeg")){
+                JOptionPane.showMessageDialog(this, "Only PNG, JPG, JPEG images are allowed!");
                 return;
             }
 
-            File folder = new File("images");
+            File folder = new File("src/images");
             if (!folder.exists()) {
                 folder.mkdirs();
             }
 
-            File destination = new File("images/" + selectedFile.getName());
+            File destination = new File("src/images/" + selectedFile.getName());
 
             try {
                 java.nio.file.Files.copy(
