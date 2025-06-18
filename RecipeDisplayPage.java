@@ -151,12 +151,13 @@ public class RecipeDisplayPage extends JFrame {
             goToRecipeDetail.setContentAreaFilled(false);
             goToRecipeDetail.setOpaque(true);
             goToRecipeDetail.setPreferredSize(new Dimension(500, 50));
-
-            //goToRecipeDetail.addActionListener(e -> {
-                // Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
-                //new test(memberID);  
-                //this.dispose();
-            //});
+            
+            Recipes currentRecipe = recipe[i];
+            goToRecipeDetail.addActionListener(e -> {
+                //Go to the page that displayed the filtered recipe, pass the memberID and selected categoryID
+                new RecipeDetailsPage(memberID, memberName, currentRecipe, categoryID, categoryName);
+                this.dispose();
+            });
             JPanel buttonWrapper = new JPanel();
             buttonWrapper.setLayout(new BoxLayout(buttonWrapper,BoxLayout.Y_AXIS));
             buttonWrapper.setOpaque(false); // to keep background consistent
