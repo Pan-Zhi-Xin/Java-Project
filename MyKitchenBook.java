@@ -1,4 +1,3 @@
-// GROUP 2
 // Personal Digital Recipe Management System
 // 1221207256 PAN ZHI XIN
 // 1221208105 KONG LEE CHING
@@ -8,6 +7,8 @@ package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,9 +16,11 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -36,48 +39,91 @@ public class MyKitchenBook extends JFrame implements ActionListener
         frame.setSize(1000, 700);
         frame.setTitle("My Kitchen Book");
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public MyKitchenBook() {
-        this.setSize(1000, 700);
-        this.setTitle("My Kitchen Book");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
-        Font title = new Font ("Arial", Font.BOLD | Font.ITALIC, 16);  
+        setSize(1000, 700);
+        setTitle("My Kitchen Book");
+        setVisible(true);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Font title = new Font ("Roboto", Font.BOLD, 35);
+        Font label = new Font ("Roboto",Font.BOLD, 20);
+        Font textField = new Font ("Roboto", Font.PLAIN, 15);
+        Font button = new Font ("Roboto", Font.BOLD, 13);
+        Font message = new Font ("Roboto", Font.BOLD, 15);
+        
         titleLabel = new JLabel("Welcome to My Kitchen Book");
         titleLabel.setFont(title);
-        emailLabel = new JLabel("Email:");
-        passwordLabel = new JLabel("Password:");
+        emailLabel = new JLabel("   Email:");
+        passwordLabel = new JLabel("   Password:");
         emailTf = new JTextField();
         passwordTf = new JPasswordField();
-        loginBtn = new JButton("Login");
-        signUpBtn = new JButton("Sign Up");
+        loginBtn = new JButton("LOGIN");
+        signUpBtn = new JButton("SIGN UP");
         messageLabel = new JLabel("");
 
         JPanel titlePanel = new JPanel();
+        titlePanel.setPreferredSize(new Dimension(400, 200));
         titlePanel.add(titleLabel);
 
-        JPanel loginPanel = new JPanel(new GridLayout(2, 2));
-        loginPanel.add(emailLabel);
-        loginPanel.add(emailTf);
-        loginPanel.add(passwordLabel);
-        loginPanel.add(passwordTf);
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(loginBtn);
-        buttonPanel.add(signUpBtn);
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        emailPanel.add(emailLabel);
+        emailLabel.setFont(label);
+        emailLabel.setPreferredSize(new Dimension(200, 100));
+        emailPanel.add(emailTf);
+        emailTf.setFont(textField);
+        emailTf.setPreferredSize(new Dimension(400, 50));
         
-        JPanel messagePanel = new JPanel(new GridLayout(2, 1));
-        messagePanel.add(messageLabel);
-        messagePanel.add(buttonPanel);
+        JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        passPanel.add(passwordLabel);
+        passwordLabel.setFont(label);
+        passwordLabel.setPreferredSize(new Dimension(200, 100));
+        passPanel.add(passwordTf);
+        passwordTf.setFont(textField);
+        passwordTf.setPreferredSize(new Dimension(400, 50));
+        
+        JPanel loginPanel = new JPanel();
+        loginPanel.setPreferredSize(new Dimension(400, 400));
+        loginPanel.add(emailPanel);
+        loginPanel.add(passPanel);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,40,10));
+        buttonPanel.add(signUpBtn);
+        signUpBtn.setFont(button);
+        signUpBtn.setPreferredSize(new Dimension(150, 40));
+        buttonPanel.add(loginBtn);
+        loginBtn.setFont(button);
+        loginBtn.setPreferredSize(new Dimension(150, 40));
+        
+        JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
+        messageLabel.setFont(message);
+        messageLabel.setHorizontalAlignment(JLabel.CENTER);
+        bottomPanel.add(messageLabel);
+        bottomPanel.add(buttonPanel);
 
         add(titlePanel, BorderLayout.NORTH);
         add(loginPanel, BorderLayout.CENTER);
-        add(messagePanel, BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         loginBtn.addActionListener(this);
         signUpBtn.addActionListener(this);
+    }
+    
+    private boolean isValidEmail(String email) {
+      
+        // Regular expression to match valid email formats
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
+                            "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    
+        // Compile the regex
+        Pattern p = Pattern.compile(emailRegex);
+      
+        // Check if email matches the pattern
+        return p.matcher(email).matches();
     }
 
     @Override
@@ -94,6 +140,13 @@ public class MyKitchenBook extends JFrame implements ActionListener
             {
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Please fill in all fields.");
+                return;
+            }
+            
+            if(!isValidEmail(email))
+            {
+                messageLabel.setForeground(Color.RED);
+                messageLabel.setText("Invalid email format.");
                 return;
             }
             
@@ -131,7 +184,8 @@ public class MyKitchenBook extends JFrame implements ActionListener
             if (loginSuccess) 
             {
                 messageLabel.setForeground(Color.GREEN);
-                messageLabel.setText("Login Successful");
+                messageLabel.setText("Login successfully!");
+                JOptionPane.showMessageDialog(this, "Login successfully!");
                 new WelcomePage(memberID, memberName);
                 this.dispose();
             } 
