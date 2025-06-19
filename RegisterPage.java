@@ -379,7 +379,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 String categoryFileName = new_id + "_category.txt";
                 try(FileWriter categoryWriter = new FileWriter(categoryFileName)) 
                 {
-                    categoryWriter.write("1, default\n");
+                    categoryWriter.write("1,Default\n");
                 } catch (IOException ex){
                     messageLabel.setText("Error writing categoty.txt");
                     return;
