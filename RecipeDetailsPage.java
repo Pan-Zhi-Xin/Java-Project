@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JDialog;
@@ -25,7 +26,8 @@ import javax.swing.BoxLayout;
 public class RecipeDetailsPage extends JFrame implements ActionListener{
     private JPanel mainPanel, topPanel, centerPanel, basicInfoPanel, infoWrapper, actionPanel, imagePanel, timePanel, difficultyPanel, descPanel, bottomPanel, ingredientsPanel, stepPanel, ingredientsPanelWrapper, stepsPanelWrapper, starsPanel;
     private JButton bBack, bEdit, bDelete, bShoppingList;
-    private JLabel title, image, timeLabel, descLabel, ingredientsContent, ingredientsTitle, stepsContent, stepsTitle, timeIconLabel, difficultyTextLabel, starLabel;
+    private JLabel title, image, timeLabel, ingredientsTitle, stepsTitle, timeIconLabel, difficultyTextLabel, starLabel, descTitle;
+    private JTextArea taIngredientsContent, taStepsContent, taDesc;
     private JScrollPane spBottom;
     private Recipes recipe;
     private String memberID;
@@ -49,7 +51,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
 
         //the return button to Log Out
         bBack = new JButton("<<");
-        bBack.setFont(new Font("Roboto", Font.BOLD, 32));
+        bBack.setFont(new Font("Roboto", Font.PLAIN, 32));
         bBack.setForeground(Color.WHITE);
         bBack.setBackground(new Color(29, 61, 89));
         bBack.setFocusPainted(false); // remove dotted focus border
@@ -61,7 +63,6 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
             new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
             this.dispose();
         });
-        
        
         // Title
         title = new JLabel(recipe.getRecipeName()); 
@@ -70,7 +71,6 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         title.setBackground(new Color(29,61,89));
         title.setOpaque(true);
         title.setPreferredSize(new Dimension(500,120));
-
 
         // Edit, Shopping List, and Delete buttons
         actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 40));
@@ -104,7 +104,6 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         topPanel.add(bBack, BorderLayout.WEST);
         topPanel.add(title, BorderLayout.CENTER);
         topPanel.add(actionPanel,BorderLayout.EAST);
-
 
         // Image
         ImageIcon icon = new ImageIcon(recipe.getImagePath());
@@ -178,12 +177,21 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                     difficultyPanel.add(difficultyTextLabel);
                     difficultyPanel.add(starsPanel);
 
-
                     // description panel
-                    descLabel = new JLabel("<html><body style='width:400px'>Description: " + description + "</body></html>");
-                    descLabel.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    descTitle = new JLabel("Description:");
+                    descTitle.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    taDesc = new JTextArea( description);
+                    taDesc.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    taDesc.setEditable(false);
+                    taDesc.setOpaque(false);
+                    taDesc.setLineWrap(true);
+                    taDesc.setWrapStyleWord(true);
+                    taDesc.setPreferredSize(new Dimension(460, 100)); 
+
                     descPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                    descPanel.add(descLabel);
+                    descPanel.add(descTitle, BorderLayout.NORTH);
+                    descPanel.add(taDesc, BorderLayout.CENTER);
+
 
                     // add to wrapper in vertical order
                     infoWrapper.add(timePanel);
@@ -195,18 +203,23 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                     basicInfoPanel.add(infoWrapper, BorderLayout.CENTER);
                     basicInfoPanel.setPreferredSize(new Dimension(500, 300));
 
-
                     ingredientsPanel = new JPanel();
-                    ingredientsContent = new JLabel("<html>"+ingredients.replace("\n", "<br>")+"</html>");
-                    ingredientsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
-                    ingredientsPanel.add(ingredientsContent);
-
+                    taIngredientsContent = new JTextArea(ingredients);
+                    taIngredientsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    taIngredientsContent.setEditable(false);
+                    taIngredientsContent.setOpaque(false);
+                    taIngredientsContent.setLineWrap(true);
+                    taIngredientsContent.setWrapStyleWord(true);
+                    ingredientsPanel.add(taIngredientsContent);
 
                     stepPanel = new JPanel();
-                    stepsContent = new JLabel("<html>"+steps.replace("\n", "<br>")+"</html>");
-                    stepsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
-                    stepPanel.add(stepsContent);
-
+                    taStepsContent = new JTextArea(steps);
+                    taStepsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    taStepsContent.setEditable(false);
+                    taStepsContent.setOpaque(false);
+                    taStepsContent.setLineWrap(true);
+                    taStepsContent.setWrapStyleWord(true);
+                    stepPanel.add(taStepsContent);
 
                     break;
                 }
