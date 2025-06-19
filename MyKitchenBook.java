@@ -26,7 +26,23 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class MyKitchenBook extends JFrame implements ActionListener
+class BasicDesign extends JFrame {
+    protected Font titleFont = new Font("Roboto", Font.BOLD, 45);
+    protected Font labelFont = new Font("Roboto", Font.BOLD, 20);
+    protected Font textFont = new Font("Roboto", Font.PLAIN, 15);
+    protected Font buttonFont = new Font("Roboto", Font.BOLD, 13);
+    protected Font messageFont = new Font ("Roboto", Font.BOLD, 15);
+    
+    public BasicDesign(String title) {
+        setTitle(title);
+        setSize(1000, 700);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+}
+
+public class MyKitchenBook extends BasicDesign implements ActionListener
 {
     private String memberID, memberName;
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
@@ -37,27 +53,14 @@ public class MyKitchenBook extends JFrame implements ActionListener
     public static void main(String[] args) 
     {
         MyKitchenBook frame = new MyKitchenBook();
-        frame.setSize(1000, 700);
-        frame.setTitle("My Kitchen Book");
         frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public MyKitchenBook() {
-        setSize(1000, 700);
-        setTitle("My Kitchen Book");
-        setVisible(true);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Font title = new Font ("Roboto", Font.BOLD, 45);
-        Font label = new Font ("Roboto",Font.BOLD, 20);
-        Font textField = new Font ("Roboto", Font.PLAIN, 15);
-        Font button = new Font ("Roboto", Font.BOLD, 13);
-        Font message = new Font ("Roboto", Font.BOLD, 15);
-        
+        //call the constructor of BasicDesign (baseclass)
+        super("My Kitchen Book");
         titleLabel = new JLabel("Welcome to My Kitchen Book");
-        titleLabel.setFont(title);
+        titleLabel.setFont(titleFont);
         emailLabel = new JLabel("   Email:");
         passwordLabel = new JLabel("   Password:");
         emailTf = new JTextField();
@@ -74,18 +77,18 @@ public class MyKitchenBook extends JFrame implements ActionListener
 
         JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         emailPanel.add(emailLabel);
-        emailLabel.setFont(label);
+        emailLabel.setFont(labelFont);
         emailLabel.setPreferredSize(new Dimension(200, 100));
         emailPanel.add(emailTf);
-        emailTf.setFont(textField);
+        emailTf.setFont(textFont);
         emailTf.setPreferredSize(new Dimension(400, 50));
         
         JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         passPanel.add(passwordLabel);
-        passwordLabel.setFont(label);
+        passwordLabel.setFont(labelFont);
         passwordLabel.setPreferredSize(new Dimension(200, 100));
         passPanel.add(passwordTf);
-        passwordTf.setFont(textField);
+        passwordTf.setFont(textFont);
         passwordTf.setPreferredSize(new Dimension(400, 50));
         
         JPanel loginPanel = new JPanel();
@@ -97,18 +100,18 @@ public class MyKitchenBook extends JFrame implements ActionListener
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,100,10));
         buttonPanel.add(signUpBtn);
-        signUpBtn.setFont(button);
+        signUpBtn.setFont(buttonFont);
         signUpBtn.setPreferredSize(new Dimension(150, 40));
         signUpBtn.setForeground(Color.WHITE);
         signUpBtn.setBackground(new Color(73,117,160));
         buttonPanel.add(loginBtn);
-        loginBtn.setFont(button);
+        loginBtn.setFont(buttonFont);
         loginBtn.setPreferredSize(new Dimension(150, 40));
         loginBtn.setForeground(Color.WHITE);
         loginBtn.setBackground(new Color(73,117,160));
         
         JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
-        messageLabel.setFont(message);
+        messageLabel.setFont(messageFont);
         messageLabel.setHorizontalAlignment(JLabel.CENTER);
         bottomPanel.add(messageLabel);
         bottomPanel.add(buttonPanel);
