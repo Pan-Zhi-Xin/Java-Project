@@ -1,3 +1,10 @@
+// GROUP 2
+// Personal Digital Recipe Management System
+// 1221207256 PAN ZHI XIN
+// 1221208105 KONG LEE CHING
+// 1221208223 LOY YU XUAN
+
+//declare package
 package com.mycompany.java_project;
 
 public class Recipes {
