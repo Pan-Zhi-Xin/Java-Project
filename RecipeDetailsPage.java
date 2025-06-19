@@ -7,36 +7,43 @@
 //declare package
 package com.mycompany.java_project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Image;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
+//for layouts
+import java.awt.FlowLayout;      //to enable flowlayout
+import java.awt.BorderLayout;    //to enable borderlayout
+import javax.swing.BoxLayout;    //to enable boxlayout
+//for GUI
+import java.awt.Color;           //for color customization
+import java.awt.Dimension;       //to enable height,width of component
+import java.awt.Font;            //for font customization
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JDialog;
+import java.awt.Image;
+import javax.swing.JButton;      //to enable JButton
+import javax.swing.JFrame;       //to enable JFrame
+import javax.swing.JPanel;       //to enable JPanel
+import javax.swing.JScrollPane;  //to enable JScrollPane
+import javax.swing.JTextArea;   
+import javax.swing.JLabel;       //to enable JLabel
+import javax.swing.JOptionPane;  //to enable JOptionPane
+import javax.swing.JDialog;      //to enable JDialog
 import javax.swing.JCheckBox;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.BoxLayout;
+//for File I/O
+import java.io.FileReader;       //to enable file reading
+//for error handling
+import java.io.IOException;      //to detect IOException
+//for event handling
+import java.awt.event.ActionEvent;      //to enable trigger events
+import java.awt.event.ActionListener;   //to handle ActionEvents
 
 public class RecipeDetailsPage extends JFrame implements ActionListener{
+    //declared JComponents
     private JPanel mainPanel, topPanel, centerPanel, basicInfoPanel, infoWrapper, actionPanel, imagePanel, timePanel, difficultyPanel, descPanel, bottomPanel, ingredientsPanel, stepPanel, ingredientsPanelWrapper, stepsPanelWrapper, starsPanel;
     private JButton bBack, bEdit, bDelete, bShoppingList;
     private JLabel title, image, timeLabel, ingredientsTitle, stepsTitle, timeIconLabel, difficultyTextLabel, starLabel, descTitle;
     private JTextArea taIngredientsContent, taStepsContent, taDesc;
     private JScrollPane spBottom;
     private Recipes recipe;
+    
     private String memberID;
     private int categoryID;
     private String categoryName;
@@ -56,17 +63,18 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
 
         mainPanel = new JPanel(new BorderLayout());
 
-        //the return button to Log Out
+        //the return button to the recipe display page
         bBack = new JButton("<<");
-        bBack.setFont(new Font("Roboto", Font.PLAIN, 32));
-        bBack.setForeground(Color.WHITE);
-        bBack.setBackground(new Color(29, 61, 89));
-        bBack.setFocusPainted(false); // remove dotted focus border
-        bBack.setBorderPainted(false); // remove button border
-        bBack.setContentAreaFilled(false); // remove fill
-        bBack.setOpaque(true); // still show background
+        bBack.setFont(new Font("Roboto", Font.PLAIN, 32)); //set font style
+        bBack.setForeground(Color.WHITE); //text color white
+        bBack.setBackground(new Color(29, 61, 89)); //background color
+        bBack.setFocusPainted(false); //remove dotted focus border
+        bBack.setBorderPainted(false); //remove button border
+        bBack.setContentAreaFilled(false); //remove fill
+        bBack.setOpaque(true); //still show background
+        //action listener for the back button
         bBack.addActionListener(e -> {
-            // return to landing page (logout)
+            // return to recipe display page 
             new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
             this.dispose();
         });
@@ -99,6 +107,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         bDelete.setBackground(new Color(73,117,160));
         bDelete.addActionListener(this);
         
+        //add the buttons to the action panel
         actionPanel.add(bEdit);
         actionPanel.add(bShoppingList);
         actionPanel.add(bDelete);
@@ -106,7 +115,8 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         actionPanel.setOpaque(true);
         actionPanel.setPreferredSize(new Dimension(500,120));
 
-        //combine logout button, welcome message & add button to craete the tab
+        //combine back button, recipe name, delete button, shopping list button & edit button to create the tab
+        //assemble the top panel
         topPanel = new JPanel(new BorderLayout());
         topPanel.add(bBack, BorderLayout.WEST);
         topPanel.add(title, BorderLayout.CENTER);
