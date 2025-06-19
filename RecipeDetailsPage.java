@@ -128,7 +128,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                 if (id == recipe.getRecipeID()) {
                     String description = parts[2].trim();
                     String time = parts[3].trim();
-                    String difficulty = parts[6].trim();
+                    String difficulty = parts[4].trim();
                     String ingredients = parts[7].trim().replace(",", "\n");
                     String steps = parts[8].trim().replace(",", "\n");
 
