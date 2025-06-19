@@ -1,10 +1,14 @@
 package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,20 +30,21 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-public class AddRecipePage extends JFrame {
-    private JLabel title1, name, prepareTime, difficultyLevel, category, image, step, description;
-    private JTextField tfName, tfTime;
-    private JPanel basicInfoPanel, ingredientPanel, stepPanel, buttonPanel, mainPanel;
+public class AddRecipePage extends JFrame implements ActionListener{
+    private JLabel image;
+    private JTextField tfName, tfTime, namePanel, timePanel, stepPanel, imagePanel, buttonPanel;
+    private JPanel mainPanel, basicInfoPanel;
     private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
-    private JScrollPane spIngredientName, spIngredientTable;
+    private JScrollPane spDescription, spIngredientTable;
     private JButton bImage, bSave, bAdd, bSub, bCancel;
+    private DefaultTableModel ingredientModel;
     private String imagePath = "src/images/default.png";
     private String memberID, memberName, categoryName;
     private int categoryID;
 
-        public AddRecipePage(String memberID, String memberName, int categoryID, String categoryName) {
+    public AddRecipePage(String memberID, String memberName, int categoryID, String categoryName) {
         this.memberID = memberID;
         this.memberName = memberName;
         this.categoryID = categoryID;
@@ -50,11 +55,11 @@ public class AddRecipePage extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         // ---------- Basic Info Panel ----------
-        JPanel basicInfoPanel = new JPanel(new GridLayout(3, 2)); // NEW: 3 rows, 2 columns
+        basicInfoPanel = new JPanel(new GridLayout(3, 2));
 
         // Name
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -94,17 +99,16 @@ public class AddRecipePage extends JFrame {
         JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         descriptionPanel.add(new JLabel("Description    :"));
         taDescription = new JTextArea();
-        JScrollPane scrollDescription = new JScrollPane(taDescription);
-        scrollDescription.setPreferredSize(new Dimension(250, 50)); 
-        descriptionPanel.add(scrollDescription);
+        spDescription = new JScrollPane(taDescription);
+        spDescription.setPreferredSize(new Dimension(250, 50)); 
+        descriptionPanel.add(spDescription);
         basicInfoPanel.add(descriptionPanel);
-
 
         // Image Upload
         JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         imagePanel.add(new JLabel("Image             :"));
         bImage = new JButton("Upload Image");
-        bImage.addActionListener(e -> uploadImage());
+        bImage.addActionListener(this);
         image = new JLabel();
         image.setPreferredSize(new Dimension(200, 100));
         imagePanel.add(bImage);
@@ -115,9 +119,9 @@ public class AddRecipePage extends JFrame {
 
         // ---------- Ingredients Table ----------
         String[] columnNames = {"Ingredient", "Quantity"};
-        DefaultTableModel ingredientModel = new DefaultTableModel(columnNames, 0);
+        ingredientModel = new DefaultTableModel(columnNames, 0);
         tIngredient = new JTable(ingredientModel);
-        JScrollPane spIngredientTable = new JScrollPane(tIngredient);
+        spIngredientTable = new JScrollPane(tIngredient);
         spIngredientTable.setPreferredSize(new Dimension(900, 100));
         mainPanel.add(new JLabel("Ingredients:"));
         mainPanel.add(spIngredientTable);
@@ -125,16 +129,15 @@ public class AddRecipePage extends JFrame {
         // Add/Remove buttons for Ingredients
         JPanel ingredientButtonPanel = new JPanel();
         bAdd = new JButton("+");
+        bAdd.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bAdd.setForeground(Color.white);
+        bAdd.setBackground(new Color(73,117,160));
         bSub = new JButton("-");
-        bAdd.addActionListener(e -> ingredientModel.addRow(new Object[]{"", ""}));
-        bSub.addActionListener(e -> {
-            int selectedRow = tIngredient.getSelectedRow();
-            if (selectedRow != -1) {
-                ingredientModel.removeRow(selectedRow);
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a row to delete.");
-            }
-        });
+        bSub.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bSub.setForeground(Color.white);
+        bSub.setBackground(new Color(73,117,160));
+        bAdd.addActionListener(this);
+        bSub.addActionListener(this);
         ingredientButtonPanel.add(bAdd);
         ingredientButtonPanel.add(bSub);
         mainPanel.add(ingredientButtonPanel);
@@ -149,12 +152,16 @@ public class AddRecipePage extends JFrame {
         // ---------- Buttons Panel ----------
         JPanel buttonPanel = new JPanel();
         bSave = new JButton("Save Recipe");
-        bSave.addActionListener(e -> saveRecipeToFile());
+        bSave.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bSave.setForeground(Color.white);
+        bSave.setBackground(new Color(73,117,160));
+        bSave.addActionListener(this);
+        
         bCancel = new JButton("Cancel");
-        bCancel.addActionListener(e -> {
-            new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
-            this.dispose();
-        });
+        bCancel.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bCancel.setForeground(Color.white);
+        bCancel.setBackground(new Color(73,117,160));
+        bCancel.addActionListener(this);
         buttonPanel.add(bSave);
         buttonPanel.add(bCancel);
         mainPanel.add(buttonPanel);
@@ -164,6 +171,31 @@ public class AddRecipePage extends JFrame {
         add(scrollPane);
 
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == bImage) {
+            uploadImage();
+        } 
+        else if (e.getSource() == bAdd) {
+            ingredientModel.addRow(new Object[]{"", ""});
+        } 
+        else if (e.getSource() == bSub) {
+            int selectedRow = tIngredient.getSelectedRow();
+            if (selectedRow != -1) {
+                ingredientModel.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to delete.");
+            }
+        } 
+        else if (e.getSource() == bSave) {
+            saveRecipeToFile();
+        } 
+        else if (e.getSource() == bCancel) {
+            new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
+            this.dispose();
+        }
     }
 
     private void loadCategories() {
@@ -195,19 +227,23 @@ public class AddRecipePage extends JFrame {
             String steps = taStep.getText().replace("\n", ",").trim();
             String image = imagePath;
 
-            // Validate that required fields are not empty
+            // Check required fields
             if (name.isEmpty() || time.isEmpty() || description.isEmpty() || steps.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all the fields (Name, Time, Description, Steps).");
                 return;
             }
 
-            // Validate that at least one ingredient is added
+            // Check Time Format
+            if (!time.matches("^([01]?\\d|2[0-3]):[0-5]\\d$")) {
+                throw new IllegalArgumentException("Time format is invalid! Please use HH:MM (e.g., 09:30 or 18:45).");
+            }
+
+            // Validate ingredients
             if (tIngredient.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Please add at least one ingredient.");
                 return;
             }
 
-            // Validate that each ingredient row is filled properly
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
                 Object ing = tIngredient.getValueAt(i, 0);
                 Object qty = tIngredient.getValueAt(i, 1);
@@ -217,6 +253,7 @@ public class AddRecipePage extends JFrame {
                 }
             }
 
+            // Save ingredients
             StringBuilder ingredients = new StringBuilder();
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
                 Object ing = tIngredient.getValueAt(i, 0);
@@ -235,10 +272,13 @@ public class AddRecipePage extends JFrame {
             writer.close();
 
             JOptionPane.showMessageDialog(this, "Recipe saved successfully!");
+        } catch (IllegalArgumentException iae) {
+            JOptionPane.showMessageDialog(this, iae.getMessage());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error saving recipe: " + e.getMessage());
         }
     }
+
 
     private String getNextRecipeID() {
         int maxID = 0;
