@@ -1,33 +1,32 @@
 package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JDialog;
 import javax.swing.JCheckBox;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 
 public class RecipeDetailsPage extends JFrame implements ActionListener{
-    private JPanel mainPanel, topPanel;
+    private JPanel mainPanel, topPanel, centerPanel, basicInfoPanel, infoWrapper, actionPanel, imagePanel, timePanel, difficultyPanel, descPanel, bottomPanel, ingredientsPanel, stepPanel, ingredientsPanelWrapper, stepsPanelWrapper, starsPanel;
     private JButton bBack, bEdit, bDelete, bShoppingList;
-    private JLabel title, image;
-    private JTextArea taDetails;
-    private JScrollPane sp;
+    private JLabel title, image, timeLabel, descLabel, ingredientsContent, ingredientsTitle, stepsContent, stepsTitle, timeIconLabel, difficultyTextLabel, starLabel;
+    private JScrollPane spBottom;
     private Recipes recipe;
     private String memberID;
     private int categoryID;
@@ -48,57 +47,79 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
 
         mainPanel = new JPanel(new BorderLayout());
 
-        // Top panel with Back, Title, and Action Buttons
-        topPanel = new JPanel(new BorderLayout());
-
-        // Left: Back button
-        bBack = new JButton("Back");
-        bBack.setFont(new Font("Roboto", Font.PLAIN, 18));
+        //the return button to Log Out
+        bBack = new JButton("<<");
+        bBack.setFont(new Font("Roboto", Font.BOLD, 32));
+        bBack.setForeground(Color.WHITE);
+        bBack.setBackground(new Color(29, 61, 89));
+        bBack.setFocusPainted(false); // remove dotted focus border
+        bBack.setBorderPainted(false); // remove button border
+        bBack.setContentAreaFilled(false); // remove fill
+        bBack.setOpaque(true); // still show background
         bBack.addActionListener(e -> {
+            // return to landing page (logout)
             new RecipeDisplayPage(memberID, memberName, categoryID, categoryName);
             this.dispose();
         });
-        topPanel.add(bBack, BorderLayout.WEST);
+        
+       
+        // Title
+        title = new JLabel(recipe.getRecipeName()); 
+        title.setFont(new Font("Roboto",Font.BOLD,56));
+        title.setForeground(Color.white);
+        title.setBackground(new Color(29,61,89));
+        title.setOpaque(true);
+        title.setPreferredSize(new Dimension(500,120));
 
-        // Center: Title
-        title = new JLabel(recipe.getRecipeName(), JLabel.CENTER); 
-        title.setFont(new Font("Roboto", Font.BOLD, 28));
-        topPanel.add(title, BorderLayout.CENTER);
 
-        // Right: Edit, Shopping List, and Delete buttons
-        JPanel actionPanel = new JPanel();
-
+        // Edit, Shopping List, and Delete buttons
+        actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 40));
         bEdit = new JButton("Edit");
-        bShoppingList = new JButton("Shopping List");
-        bDelete = new JButton("Delete");
-
-        bEdit.setFont(new Font("Roboto", Font.PLAIN, 16));
-        bShoppingList.setFont(new Font("Roboto", Font.PLAIN, 16));
-        bDelete.setFont(new Font("Roboto", Font.PLAIN, 16));
-
+        bEdit.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bEdit.setForeground(Color.white);
+        bEdit.setBackground(new Color(73,117,160));
         bEdit.addActionListener(this);
-        bShoppingList.addActionListener(this);
-        bDelete.addActionListener(this);
 
+        bShoppingList = new JButton("Shopping List");
+        bShoppingList.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bShoppingList.setForeground(Color.white);
+        bShoppingList.setBackground(new Color(73,117,160));
+        bShoppingList.addActionListener(this);
+        
+        bDelete = new JButton("Delete");
+        bDelete.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bDelete.setForeground(Color.white);
+        bDelete.setBackground(new Color(73,117,160));
+        bDelete.addActionListener(this);
+        
         actionPanel.add(bEdit);
         actionPanel.add(bShoppingList);
         actionPanel.add(bDelete);
-        topPanel.add(actionPanel, BorderLayout.EAST);
+        actionPanel.setBackground(new Color(29,61,89));
+        actionPanel.setOpaque(true);
+        actionPanel.setPreferredSize(new Dimension(500,120));
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        //combine logout button, welcome message & add button to craete the tab
+        topPanel = new JPanel(new BorderLayout());
+        topPanel.add(bBack, BorderLayout.WEST);
+        topPanel.add(title, BorderLayout.CENTER);
+        topPanel.add(actionPanel,BorderLayout.EAST);
+
 
         // Image
         ImageIcon icon = new ImageIcon(recipe.getImagePath());
         Image scaledImage = icon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
         image = new JLabel(new ImageIcon(scaledImage));
         image.setHorizontalAlignment(JLabel.CENTER);
-        mainPanel.add(image, BorderLayout.CENTER);
+        
+        imagePanel = new JPanel(new BorderLayout());
+        imagePanel.add(image, BorderLayout.CENTER);
 
-        // Recipe details
-        taDetails = new JTextArea();
-        taDetails.setEditable(false);
-        taDetails.setFont(new Font("Roboto", Font.PLAIN, 18));
-
+        timePanel = new JPanel();
+        descPanel = new JPanel();
+        ingredientsPanel = new JPanel();
+        stepPanel = new JPanel();
+   
         try {
             Scanner input = new Scanner(new FileReader(memberID + "_recipe.txt"));
             while (input.hasNextLine()) {
@@ -106,32 +127,127 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                 String[] parts = line.split("\\|", 9);
                 int id = Integer.parseInt(parts[0].trim());
                 if (id == recipe.getRecipeID()) {
-                    String name = parts[1].trim();
                     String description = parts[2].trim();
                     String time = parts[3].trim();
                     String difficulty = parts[6].trim();
                     String ingredients = parts[7].trim().replace(",", "\n");
                     String steps = parts[8].trim().replace(",", "\n");
 
-                    taDetails.setText(
-                        "Recipe Name: " + name +
-                        "\n\nDescription:\n" + description +
-                        "\n\nTime: " + time +
-                        "\n\nDifficulty: " + difficulty +
-                        "\n\nIngredients:\n" + ingredients +
-                        "\n\nSteps:\n" + steps
-                    );
+                    basicInfoPanel = new JPanel(new BorderLayout());
+                    basicInfoPanel.setPreferredSize(new Dimension(500, 300));
+
+                    infoWrapper = new JPanel();
+                    infoWrapper.setLayout(new BoxLayout(infoWrapper, BoxLayout.Y_AXIS));
+
+
+                    // time panel
+                    ImageIcon timeIcon = new ImageIcon("src/images/time.png");
+                    Image timeImg = timeIcon.getImage().getScaledInstance(24, 24, Image.SCALE_SMOOTH);
+                    timeIconLabel = new JLabel(new ImageIcon(timeImg));
+                    timeLabel = new JLabel(time);
+                    timeLabel.setFont(new Font("Roboto", Font.PLAIN, 20));
+
+                    timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                    timePanel.add(timeIconLabel);
+                    timePanel.add(timeLabel);
+
+                    // difficulty panel
+                    int diffLevel = Integer.parseInt(difficulty);
+                    // Label for "Difficulty: "
+                    difficultyTextLabel = new JLabel("Difficulty: ");
+                    difficultyTextLabel.setFont(new Font("Roboto", Font.PLAIN, 20));
+
+                    // Load star icon
+                    ImageIcon starIcon = new ImageIcon("src/images/star.png");
+                    Image starImg = starIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                    ImageIcon scaledStarIcon = new ImageIcon(starImg);
+
+                    // Panel to hold stars
+                    starsPanel = new JPanel();
+                    starsPanel.setLayout(new BoxLayout(starsPanel, BoxLayout.X_AXIS));
+                    starsPanel.setOpaque(false);
+
+                    starsPanel.setOpaque(false);
+                    for (int i = 0; i < diffLevel; i++) {
+                        starLabel = new JLabel(scaledStarIcon);
+                        starsPanel.add(starLabel);
+                    }
+
+                    // Final difficulty panel
+                    difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                    difficultyPanel.add(difficultyTextLabel);
+                    difficultyPanel.add(starsPanel);
+
+
+                    // description panel
+                    descLabel = new JLabel("<html><body style='width:400px'>Description: " + description + "</body></html>");
+                    descLabel.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    descPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                    descPanel.add(descLabel);
+
+                    // add to wrapper in vertical order
+                    infoWrapper.add(timePanel);
+                    infoWrapper.add(difficultyPanel);
+                    infoWrapper.add(descPanel);
+
+                    // place wrapper in CENTER of BorderLayout
+                    basicInfoPanel = new JPanel(new BorderLayout());
+                    basicInfoPanel.add(infoWrapper, BorderLayout.CENTER);
+                    basicInfoPanel.setPreferredSize(new Dimension(500, 300));
+
+
+                    ingredientsPanel = new JPanel();
+                    ingredientsContent = new JLabel("<html>"+ingredients.replace("\n", "<br>")+"</html>");
+                    ingredientsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    ingredientsPanel.add(ingredientsContent);
+
+
+                    stepPanel = new JPanel();
+                    stepsContent = new JLabel("<html>"+steps.replace("\n", "<br>")+"</html>");
+                    stepsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
+                    stepPanel.add(stepsContent);
+
+
                     break;
                 }
             }
             input.close();
         } catch (IOException e) {
-            taDetails.setText("Error loading recipe details.");
+            JOptionPane.showMessageDialog(this, "Error loading recipe details.");
         }
 
-        sp = new JScrollPane(taDetails);
-        sp.setPreferredSize(new java.awt.Dimension(580, 200));
-        mainPanel.add(sp, BorderLayout.SOUTH);
+     
+        centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 20)); 
+        centerPanel.setBackground(Color.white);
+        centerPanel.add(imagePanel); 
+        centerPanel.add(basicInfoPanel);
+
+
+        ingredientsPanelWrapper = new JPanel(new BorderLayout());
+        ingredientsTitle = new JLabel(" Ingredients:");
+        ingredientsTitle.setFont(new Font("Roboto", Font.BOLD, 20)); // title font
+        ingredientsPanelWrapper.add(ingredientsTitle, BorderLayout.NORTH);
+        ingredientsPanelWrapper.add(ingredientsPanel, BorderLayout.CENTER);
+
+
+        stepsPanelWrapper = new JPanel(new BorderLayout());
+        stepsTitle = new JLabel(" Step(s):");
+        stepsTitle.setFont(new Font("Roboto", Font.BOLD, 20)); // title font
+        stepsPanelWrapper.add(stepsTitle, BorderLayout.NORTH);
+        stepsPanelWrapper.add(stepPanel, BorderLayout.CENTER);
+
+
+        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 20)); 
+        bottomPanel.add(ingredientsPanelWrapper);
+        bottomPanel.add(stepsPanelWrapper);
+
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        spBottom = new JScrollPane(bottomPanel);
+        spBottom.setPreferredSize(new Dimension(1000, 200));
+        mainPanel.add(spBottom, BorderLayout.SOUTH);
+
 
         add(mainPanel);
         setVisible(true);
