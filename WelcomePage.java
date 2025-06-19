@@ -361,7 +361,7 @@ public class WelcomePage extends JFrame {
                     int confirm = JOptionPane.showConfirmDialog(
                             WelcomePage.this,
                             "Remove "+ category[index].getCategoryName() + " ?",
-                            "Yes",
+                            "Confirm Deletion",
                             JOptionPane.YES_NO_OPTION
                     );
 
