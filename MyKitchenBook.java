@@ -19,14 +19,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 class BasicDesign extends JFrame {
+    //set font size & style
     protected Font titleFont = new Font("Roboto", Font.BOLD, 45);
     protected Font labelFont = new Font("Roboto", Font.BOLD, 20);
     protected Font textFont = new Font("Roboto", Font.PLAIN, 15);
@@ -34,47 +37,53 @@ class BasicDesign extends JFrame {
     protected Font messageFont = new Font ("Roboto", Font.BOLD, 15);
     
     public BasicDesign(String title) {
-        setTitle(title);
-        setSize(1000, 700);
-        setLocationRelativeTo(null);
+        setTitle(title);//set page title
+        setSize(1000, 700);//set page size
+        setLocationRelativeTo(null);//center on screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
+        setVisible(true);//show page
     }
 }
 
+//main page for My Kitchen Book login
 public class MyKitchenBook extends BasicDesign implements ActionListener
 {
+    //variable declaration
     private String memberID, memberName;
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
     private JTextField emailTf;
     private JPasswordField passwordTf;
     private JButton loginBtn, signUpBtn;
+    private JCheckBox passwordCb;
 
     public static void main(String[] args) 
     {
         MyKitchenBook frame = new MyKitchenBook();
-        frame.setVisible(true);
+        frame.setVisible(true);//show page
     }
 
     public MyKitchenBook() {
-        //call the constructor of BasicDesign (baseclass)
+        //call the constructor of BasicDesign and pass page title name
         super("My Kitchen Book");
+        //craete all text and button
         titleLabel = new JLabel("Welcome to My Kitchen Book");
         titleLabel.setFont(titleFont);
-        emailLabel = new JLabel("   Email:");
-        passwordLabel = new JLabel("   Password:");
+        emailLabel = new JLabel("Email:");
+        passwordLabel = new JLabel("Password:");
         emailTf = new JTextField();
         passwordTf = new JPasswordField();
         loginBtn = new JButton("LOGIN");
         signUpBtn = new JButton("SIGN UP");
-        messageLabel = new JLabel("");
+        messageLabel = new JLabel("");//error message label
 
+        //blue title bar at top
         JPanel titlePanel = new JPanel();
         titlePanel.setPreferredSize(new Dimension(400, 80));
         titlePanel.add(titleLabel);
         titlePanel.setBackground(new Color(29, 61, 89));
         titleLabel.setForeground(Color.WHITE);
 
+        //email input(label & textfield)
         JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         emailPanel.add(emailLabel);
         emailLabel.setFont(labelFont);
@@ -83,6 +92,7 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         emailTf.setFont(textFont);
         emailTf.setPreferredSize(new Dimension(400, 50));
         
+        //password input(label & textfield)
         JPanel passPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         passPanel.add(passwordLabel);
         passwordLabel.setFont(labelFont);
@@ -91,12 +101,26 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         passwordTf.setFont(textFont);
         passwordTf.setPreferredSize(new Dimension(400, 50));
         
+        //show password checkbox
+        passwordCb = new JCheckBox("Show Passwords");
+        passwordCb.addActionListener(this);
+        passwordCb.setFont(textFont);
+
+        //put password and checkbox together while checkbox at the center
+        JPanel passwordContainer = new JPanel(new BorderLayout());
+        passwordContainer.add(passPanel, BorderLayout.NORTH); 
+        JPanel checkBoxPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        checkBoxPanel.add(passwordCb);
+        passwordContainer.add(checkBoxPanel, BorderLayout.CENTER); 
+    
+        //login form
         JPanel loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(400, 400));
         loginPanel.setBorder(new javax.swing.border.EmptyBorder(80, 0, 0, 0));
-        loginPanel.add(emailPanel);
-        loginPanel.add(passPanel);
+        loginPanel.add(emailPanel, BorderLayout.NORTH);
+        loginPanel.add(passwordContainer, BorderLayout.CENTER);
         
+        //put button panel at the bottom of page
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,100,10));
         buttonPanel.add(signUpBtn);
@@ -110,20 +134,23 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         loginBtn.setForeground(Color.WHITE);
         loginBtn.setBackground(new Color(73,117,160));
         
+        //put message and button panel together while message show at the center
         JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
         messageLabel.setFont(messageFont);
         messageLabel.setHorizontalAlignment(JLabel.CENTER);
         bottomPanel.add(messageLabel);
         bottomPanel.add(buttonPanel);
 
-        add(titlePanel, BorderLayout.NORTH);
-        add(loginPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        add(titlePanel, BorderLayout.NORTH);//title bar
+        add(loginPanel, BorderLayout.CENTER);//main login form
+        add(bottomPanel, BorderLayout.SOUTH);//error message & button panel
 
+        //make button work when click
         loginBtn.addActionListener(this);
         signUpBtn.addActionListener(this);
     }
     
+    //check email format method
     private boolean isValidEmail(String email) {
       
         // Regular expression to match valid email formats
@@ -142,18 +169,21 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
     {
         if (e.getSource() == loginBtn) 
         {
+            //get email & password
             String email = emailTf.getText().trim();
             String password = String.valueOf(passwordTf.getPassword()).trim();
 
             boolean loginSuccess = false;
             
+            //check if fields is empty
             if (email.trim().isEmpty() || password.trim().isEmpty()) 
             {
-                messageLabel.setForeground(Color.RED);
-                messageLabel.setText("Please fill in all fields.");
+                messageLabel.setForeground(Color.RED);//set message color
+                messageLabel.setText("Please fill in all fields.");//set message content
                 return;
             }
             
+            //check email format
             if(!isValidEmail(email))
             {
                 messageLabel.setForeground(Color.RED);
@@ -163,17 +193,21 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
             
             try
             {
+                //try to read customer.txt file
                 BufferedReader readFile = new BufferedReader (new FileReader("customer.txt"));
                 String line = readFile.readLine();
                 
                 while (line != null)
                 {
+                    //split and get each part from file
                     String[] parts = line.split(",");
                     if (parts.length == 4)
                     {
+                        //get data from file
                         String custEmail = parts[2].trim();
                         String custPassword = parts[3].trim();
-
+                        
+                        //check if email & password is matches
                         if (email.equals(custEmail) && password.equals(custPassword))
                         {
                             loginSuccess = true;
@@ -186,6 +220,7 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
                     line = readFile.readLine();
                 } 
                 readFile.close();
+                //event handling when has read file error
             } catch (IOException ex) {
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Error reading file.");
@@ -195,22 +230,29 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
             if (loginSuccess) 
             {
                 messageLabel.setForeground(Color.GREEN);
-                messageLabel.setText("Login successfully!");
-                JOptionPane.showMessageDialog(this, "Login successfully!");
-                new WelcomePage(memberID, memberName);
-                this.dispose();
+                JOptionPane.showMessageDialog(this, "Login successfully!");//pop up dialog to show success message
+                new WelcomePage(memberID, memberName);//redirect to welcome page
+                this.dispose();//close this page
             } 
-            else 
+            else //login failed
             {
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid Email or Password");
             }
         }
-        
-        if (e.getSource() == signUpBtn)
+        else if (e.getSource() == signUpBtn)
         {
-            new RegisterPage();
+            new RegisterPage();//redirect to register page
             this.dispose();
+        }
+        else if (e.getSource() == passwordCb)
+        {
+            if (passwordCb.isSelected()) {
+                passwordTf.setEchoChar('\u0000'); //show password
+            } else {
+                //hide password
+                passwordTf.setEchoChar((Character)UIManager.get("PasswordField.echoChar"));
+            }
         }
     }
 }
