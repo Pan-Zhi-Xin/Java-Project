@@ -1,10 +1,14 @@
 package com.mycompany.java_project;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,20 +32,21 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-public class EditRecipePage extends JDialog {
+public class EditRecipePage extends JDialog implements ActionListener{
     private JTextField tfName, tfTime;
-    private JComboBox<String> cDifficulty, cCategory;
+    private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
     private JButton bImage, bSave, bAdd, bSub, bCancel;
     private JLabel image;
+    private JScrollPane sp;
     private String imagePath;
     private String memberID, memberName, categoryName;
     private int categoryID;
     private Recipes recipe;
     private DefaultTableModel ingredientModel;
 
-    public EditRecipePage(RecipeDetailsPage parent, String memberID, String memberName, Recipes recipe, int categoryID, String categoryName) {
+     public EditRecipePage(RecipeDetailsPage parent, String memberID, String memberName, Recipes recipe, int categoryID, String categoryName) {
         super(parent, "Edit Recipe", true);
         this.memberID = memberID;
         this.memberName = memberName;
@@ -112,7 +117,7 @@ public class EditRecipePage extends JDialog {
         JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         imagePanel.add(new JLabel("Image:"));
         bImage = new JButton("Upload Image");
-        bImage.addActionListener(e -> uploadImage());
+        bImage.addActionListener(this);
         image = new JLabel();
         image.setPreferredSize(new Dimension(200, 100));
         
@@ -160,16 +165,17 @@ public class EditRecipePage extends JDialog {
         // Add/Remove buttons for Ingredients
         JPanel ingredientButtonPanel = new JPanel();
         bAdd = new JButton("Add Ingredient");
+        bAdd.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bAdd.setForeground(Color.white);
+        bAdd.setBackground(new Color(73,117,160));
+        bAdd.addActionListener(this);
+        
         bSub = new JButton("Remove Ingredient");
-        bAdd.addActionListener(e -> ingredientModel.addRow(new Object[]{"", ""}));
-        bSub.addActionListener(e -> {
-            int selectedRow = tIngredient.getSelectedRow();
-            if (selectedRow != -1) {
-                ingredientModel.removeRow(selectedRow);
-            } else {
-                JOptionPane.showMessageDialog(this, "Please select a row to delete.");
-            }
-        });
+        bSub.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bSub.setForeground(Color.white);
+        bSub.setBackground(new Color(73,117,160));
+        bSub.addActionListener(this);
+        
         ingredientButtonPanel.add(bAdd);
         ingredientButtonPanel.add(bSub);
         mainPanel.add(ingredientButtonPanel);
@@ -188,18 +194,50 @@ public class EditRecipePage extends JDialog {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         bSave = new JButton("Save Changes");
-        bSave.addActionListener(e -> updateRecipe());
+        bSave.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bSave.setForeground(Color.white);
+        bSave.setBackground(new Color(73,117,160));
+        bSave.addActionListener(this);
+
         bCancel = new JButton("Cancel");
-        bCancel.addActionListener(e -> dispose());
+        bCancel.setFont(new Font("Roboto", Font.PLAIN, 20));
+        bCancel.setForeground(Color.white);
+        bCancel.setBackground(new Color(73,117,160));
+        bCancel.addActionListener(this);
+
         buttonPanel.add(bSave);
         buttonPanel.add(bCancel);
         mainPanel.add(buttonPanel);
 
         // ---------- Wrap with ScrollPane ----------
-        JScrollPane scrollPane = new JScrollPane(mainPanel);
-        add(scrollPane);
+        sp = new JScrollPane(mainPanel);
+        add(sp);
 
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == bImage) {
+            uploadImage();
+        } 
+        else if (e.getSource() == bAdd) {
+            ingredientModel.addRow(new Object[]{"", ""});
+        } 
+        else if (e.getSource() == bSub) {
+            int selectedRow = tIngredient.getSelectedRow();
+            if (selectedRow != -1) {
+                ingredientModel.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select a row to delete.");
+            }
+        } 
+        else if (e.getSource() == bSave) {
+            updateRecipe();
+        } 
+        else if (e.getSource() == bCancel) {
+            dispose();
+        }
     }
 
     private void loadCategories() {
@@ -242,6 +280,10 @@ public class EditRecipePage extends JDialog {
                 return;
             }
 
+            if (!time.matches("^([01]?\\d|2[0-3]):[0-5]\\d$")) {
+                throw new IllegalArgumentException("Time format is invalid! Please use HH:MM (e.g., 09:30 or 18:45).");
+            }
+
             // Validate ingredients
             StringBuilder ingredients = new StringBuilder();
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
@@ -277,11 +319,11 @@ public class EditRecipePage extends JDialog {
             File file = new File(memberID + "_recipe.txt");
             File tempFile = new File(memberID + "_recipe_temp.txt");
 
-            try (Scanner scanner = new Scanner(file);
+            try (Scanner input = new Scanner(file);
                  PrintWriter writer = new PrintWriter(new FileWriter(tempFile))) {
                 
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
                     String[] parts = line.split("\\|");
                     if (parts.length > 0 && parts[0].trim().equals(id)) {
                         writer.println(updatedLine);
@@ -319,9 +361,13 @@ public class EditRecipePage extends JDialog {
             parent.dispose();
             new RecipeDetailsPage(memberID, memberName, recipe, Integer.parseInt(categoryID), newCategoryName);
             
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error updating recipe: " + e.getMessage(), 
+        } 
+        catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Invalid Input", JOptionPane.WARNING_MESSAGE);
+        } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Error updating recipe: " + e.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
