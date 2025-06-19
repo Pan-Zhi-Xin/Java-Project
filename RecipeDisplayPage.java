@@ -21,27 +21,6 @@ import java.awt.Image;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 
-//Recipes class to save recipe id, name, and image file path
-class Recipes{
-    //private instance data
-    private int recipeID;
-    private String recipeName;
-    private int categoryID;
-    private String imagePath;
-    
-    //constructor to set instance data
-    public Recipes(int recipeID, String recipeName, int categoryID, String imagePath){
-        this.recipeID = recipeID;
-        this.recipeName = recipeName;
-        this.categoryID = categoryID;
-        this.imagePath = imagePath;
-    }
-    public int getRecipeID(){return recipeID;}
-    public String getRecipeName(){return recipeName;}
-    public int getCategoryID(){return categoryID;}
-    public String getImagePath(){return imagePath;}
-}//end of class Recipes
-
 //public class to display the Welcome Page after successfully login
 public class RecipeDisplayPage extends JFrame {
     private JButton logout, addRecipe, goToRecipeDetail;
@@ -113,9 +92,14 @@ public class RecipeDisplayPage extends JFrame {
                 String name = parts[1].trim();
                 String imagepath = parts[5].trim();
                 int category = Integer.parseInt(parts[6].trim());
+                String desc = parts[2].trim();
+                String time = parts[3].trim();
+                String diff = parts[4].trim();
+                String ingredients = parts[7].trim();
+                String steps = parts[8].trim();
 
                 if (category == categoryID) {
-                    filteredRecipe.add(new Recipes(id, name, category, imagepath));
+                    filteredRecipe.add(new Recipes(id, name, desc, time, diff, imagepath, category, ingredients, steps));
                 }
             }
             readRecipeFile.close();

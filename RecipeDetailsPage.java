@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,7 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class RecipeDetailsPage extends JFrame {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class RecipeDetailsPage extends JFrame implements ActionListener{
     private JPanel mainPanel, topPanel;
     private JButton bBack, bEdit, bDelete, bShoppingList;
     private JLabel title, image;
@@ -32,7 +36,7 @@ public class RecipeDetailsPage extends JFrame {
         // Top panel with Back, Title, and Action Buttons
         topPanel = new JPanel(new BorderLayout());
 
-        // Back button
+        // Left: Back button
         bBack = new JButton("Back");
         bBack.setFont(new Font("Roboto", Font.PLAIN, 18));
         bBack.addActionListener(e -> {
@@ -41,12 +45,12 @@ public class RecipeDetailsPage extends JFrame {
         });
         topPanel.add(bBack, BorderLayout.WEST);
 
-        // Title
+        // Center: Title
         title = new JLabel(recipe.getRecipeName(), JLabel.CENTER); 
         title.setFont(new Font("Roboto", Font.BOLD, 28));
         topPanel.add(title, BorderLayout.CENTER);
 
-        // Edit, Shopping List, and Delete buttons
+        // Right: Edit, Shopping List, and Delete buttons
         JPanel actionPanel = new JPanel();
 
         bEdit = new JButton("Edit️");
@@ -58,15 +62,19 @@ public class RecipeDetailsPage extends JFrame {
         bDelete.setFont(new Font("Roboto", Font.PLAIN, 16));
 
  
-        // bEdit.addActionListener(e -> {
+        bEdit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EditRecipePage(RecipeDetailsPage.this, memberID, memberName, recipe, categoryID, categoryName);
+            }
+        });
+
+       /*  bShoppingList.addActionListener(e -> {
            
-        // });
-        // bShoppingList.addActionListener(e -> {
-           
-        // });
-        // bDelete.addActionListener(e -> {
+        });
+        bDelete.addActionListener(e -> {
             
-        // }); 
+        }); */
 
         actionPanel.add(bEdit);
         actionPanel.add(bShoppingList);
@@ -123,5 +131,10 @@ public class RecipeDetailsPage extends JFrame {
 
         add(mainPanel);
         setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
