@@ -79,7 +79,7 @@ public class AddRecipePage extends JFrame implements ActionListener{
         // Prepare Time
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         timePanel.add(new JLabel("Prepare Time :"));
-        tfTime = new JTextField();
+        tfTime = new JTextField("HH:MM");
         tfTime.setPreferredSize(new Dimension(250, 50));
         timePanel.add(tfTime);
         basicInfoPanel.add(timePanel);
@@ -151,7 +151,7 @@ public class AddRecipePage extends JFrame implements ActionListener{
 
         // ---------- Step Panel ----------
         JPanel stepPanel = new JPanel(new BorderLayout());
-        stepPanel.add(new JLabel("Steps:"), BorderLayout.NORTH);
+        stepPanel.add(new JLabel("Steps (Press ENTER while typing the next step) :"), BorderLayout.NORTH);
         taStep = new JTextArea(5, 10);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
         mainPanel.add(stepPanel);
@@ -231,7 +231,7 @@ public class AddRecipePage extends JFrame implements ActionListener{
             String selectedCategory = String.valueOf(cCategory.getSelectedItem());
             String categoryID = selectedCategory.split(",")[0];
             String description = taDescription.getText().trim();
-            String steps = taStep.getText().replace("\n", ",").trim();
+            String steps = taStep.getText().replace("\n", ";").trim();
             String image = imagePath;
 
             // Check required fields

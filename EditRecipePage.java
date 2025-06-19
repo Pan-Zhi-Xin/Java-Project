@@ -190,8 +190,8 @@ public class EditRecipePage extends JDialog implements ActionListener{
         // ---------- Step Panel ----------
         JPanel stepPanel = new JPanel(new BorderLayout());
         stepPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        stepPanel.add(new JLabel("Steps:"), BorderLayout.NORTH);
-        taStep = new JTextArea(recipe.getSteps().replace(",", "\n"), 10, 20);
+        stepPanel.add(new JLabel("Steps (Press ENTER while typing the next step) :"), BorderLayout.NORTH);
+        taStep = new JTextArea(recipe.getSteps().replace(";", "\n"), 10, 20);
         taStep.setLineWrap(true);
         taStep.setWrapStyleWord(true);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
@@ -278,7 +278,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
             String categoryID = categoryParts[0];
             String newCategoryName = categoryParts.length > 1 ? categoryParts[1] : "Default";
             String description = taDescription.getText().trim();
-            String steps = taStep.getText().replace("\n", ",").trim();
+            String steps = taStep.getText().replace("\n", ";").trim();
             String image = imagePath;
 
             // Validate fields

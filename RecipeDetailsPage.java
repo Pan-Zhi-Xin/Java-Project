@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;    //to enable boxlayout
 import java.awt.Color;           //for color customization
 import java.awt.Dimension;       //to enable height,width of component
 import java.awt.Font;            //for font customization
+import java.awt.GridLayout;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import javax.swing.JButton;      //to enable JButton
@@ -34,6 +35,7 @@ import java.io.IOException;      //to detect IOException
 //for event handling
 import java.awt.event.ActionEvent;      //to enable trigger events
 import java.awt.event.ActionListener;   //to handle ActionEvents
+import javax.swing.border.EmptyBorder;
 
 public class RecipeDetailsPage extends JFrame implements ActionListener{
     //declared JComponents
@@ -109,8 +111,8 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         
         //add the buttons to the action panel
         actionPanel.add(bEdit);
-        actionPanel.add(bShoppingList);
         actionPanel.add(bDelete);
+        actionPanel.add(bShoppingList);
         actionPanel.setBackground(new Color(29,61,89));
         actionPanel.setOpaque(true);
         actionPanel.setPreferredSize(new Dimension(500,120));
@@ -147,7 +149,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                     String time = parts[3].trim();
                     String difficulty = parts[4].trim();
                     String ingredients = parts[7].trim().replace(",", "\n");
-                    String steps = parts[8].trim().replace(",", "\n");
+                    String steps = "#" + parts[8].trim().replace(";", "\n#");
 
                     basicInfoPanel = new JPanel(new BorderLayout());
                     basicInfoPanel.setPreferredSize(new Dimension(500, 300));
@@ -220,23 +222,27 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                     basicInfoPanel.add(infoWrapper, BorderLayout.CENTER);
                     basicInfoPanel.setPreferredSize(new Dimension(500, 300));
 
-                    ingredientsPanel = new JPanel();
+                    ingredientsPanel = new JPanel(new BorderLayout());
                     taIngredientsContent = new JTextArea(ingredients);
                     taIngredientsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
                     taIngredientsContent.setEditable(false);
                     taIngredientsContent.setOpaque(false);
                     taIngredientsContent.setLineWrap(true);
                     taIngredientsContent.setWrapStyleWord(true);
-                    ingredientsPanel.add(taIngredientsContent);
+                    taIngredientsContent.setPreferredSize(new Dimension(300, 200)); // adjust as needed
+                    ingredientsPanel.add(taIngredientsContent,BorderLayout.CENTER);
+                    ingredientsPanel.setBorder(new EmptyBorder(10,10,10,10)); //add padding around panel
 
-                    stepPanel = new JPanel();
+                    stepPanel = new JPanel(new BorderLayout());
                     taStepsContent = new JTextArea(steps);
                     taStepsContent.setFont(new Font("Roboto", Font.PLAIN, 20));
                     taStepsContent.setEditable(false);
                     taStepsContent.setOpaque(false);
                     taStepsContent.setLineWrap(true);
                     taStepsContent.setWrapStyleWord(true);
-                    stepPanel.add(taStepsContent);
+                    taStepsContent.setPreferredSize(new Dimension(500, 200));
+                    stepPanel.add(taStepsContent,BorderLayout.CENTER);
+                    stepPanel.setBorder(new EmptyBorder(10,10,10,10)); //add padding around panel
 
                     break;
                 }
@@ -267,7 +273,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
         stepsPanelWrapper.add(stepPanel, BorderLayout.CENTER);
 
 
-        bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 100, 20)); 
+        bottomPanel = new JPanel(new GridLayout(1, 2, 30, 0)); // 1 row, 2 columns, 30px horizontal gap
         bottomPanel.add(ingredientsPanelWrapper);
         bottomPanel.add(stepsPanelWrapper);
 

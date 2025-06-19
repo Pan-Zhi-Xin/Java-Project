@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -57,7 +58,7 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
     private JPasswordField passwordTf;
     private JButton loginBtn, signUpBtn;
     private JCheckBox passwordCb;
-    ImageIcon img = new ImageIcon("logo.png");
+    ImageIcon img = new ImageIcon("src/images/logo.png");
 
     public static void main(String[] args) 
     {
@@ -85,8 +86,11 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         titlePanel.setPreferredSize(new Dimension(400, 80));
         titlePanel.setBackground(new Color(29, 61, 89));
         //logo
+        Image scaledImage = img.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH); //fixed the image size
+        imglb = new JLabel(new ImageIcon(scaledImage));
         titlePanel.add(imglb, BorderLayout.WEST);
         titlePanel.add(titleLabel, BorderLayout.CENTER);
+        titlePanel.setPreferredSize(new Dimension(1000,120));
 
         titleLabel.setForeground(Color.WHITE);
 

@@ -1,3 +1,6 @@
 1,Default
-2,Cake
-3,Kuih
+2,Cake and Bread
+3,Chinese Dim Sum
+4,Italian Classic
+5,Midnight Snack
+6,Spicy Delicacy

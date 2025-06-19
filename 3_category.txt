@@ -1,4 +1,6 @@
 1,Default
 2,Breakfast
-3,Snack
-4,Beverage
+3,Cake and Bread
+4,Lunch
+5,Beverage
+6,Snack
