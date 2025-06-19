@@ -314,7 +314,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 //check name length
                 if(name.length()<5)
                 {
-                    messageLabel.setText("Invalid name. Nama must at least 5 letters.");
+                    messageLabel.setText("Invalid name. The name must have at least 5 letters.");
                     return;
                 }
                 
@@ -342,8 +342,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 //check password format
                 if(!isValidPassword(password))
                 {
-                    messageLabel.setText("Password must at leat 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special symbol.");
-                    
+                    messageLabel.setText("Password must have at least 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special symbol.");
                     return;
                 }
 
@@ -396,6 +395,7 @@ public class RegisterPage extends JFrame implements ActionListener{
             }
 
             if (registerSuccess){
+                messageLabel.setText("");
                 JOptionPane.showMessageDialog(this, "Register successfully!");
                 new MyKitchenBook();//redirect back to login page
                 this.dispose();//close this page
