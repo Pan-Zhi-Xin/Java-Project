@@ -15,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class RegisterPage extends JFrame implements ActionListener{
         JPanel clearButtonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         clearBtn.setFont(button);
         clearBtn.setPreferredSize(new Dimension(100, 30));
-        clearButtonPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
+        clearButtonPanel.setBorder(new EmptyBorder(10, 0, 10, 20));
         clearButtonPanel.add(clearBtn);
         topPanel.add(clearButtonPanel, BorderLayout.SOUTH);
         
@@ -139,10 +140,9 @@ public class RegisterPage extends JFrame implements ActionListener{
 
         //main content panel
         JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
         //registration form
-        JPanel fieldsPanel = new JPanel(new BorderLayout(0, 20));
+        JPanel fieldsPanel = new JPanel(new BorderLayout());
         fieldsPanel.add(namePanel, BorderLayout.NORTH);
         fieldsPanel.add(emailPanel, BorderLayout.CENTER);
         fieldsPanel.add(passwordFieldsPanel, BorderLayout.SOUTH);
@@ -205,8 +205,9 @@ public class RegisterPage extends JFrame implements ActionListener{
                 line = readFile.readLine();
             } 
             readFile.close();
-        } catch (IOException ex) {
-            messageLabel.setForeground(Color.RED);
+        }catch(FileNotFoundException ex){
+                messageLabel.setText("customer file not found.");
+        }catch (IOException ex) {
             messageLabel.setText("Error reading file.");
         }
         return false;
@@ -234,8 +235,9 @@ public class RegisterPage extends JFrame implements ActionListener{
                 line = readFile.readLine();
             } 
             readFile.close();
-        } catch (IOException ex) {
-            messageLabel.setForeground(Color.RED);
+        }catch(FileNotFoundException ex){
+                messageLabel.setText("customer file not found.");
+        }catch (IOException ex) {
             messageLabel.setText("Error reading file.");
         }
         return false;
@@ -354,7 +356,10 @@ public class RegisterPage extends JFrame implements ActionListener{
                 try(FileWriter idWriter = new FileWriter ("customer_id.txt")) 
                 {
                     idWriter.write(String.valueOf(new_id + 1));
-                } catch (IOException ex){
+                }catch(FileNotFoundException ex){
+                    messageLabel.setText("customer_id file not found.");
+                    return;
+                }catch (IOException ex){
                     messageLabel.setText("Error writing customer_id.txt");
                     return;
                 }
@@ -363,7 +368,10 @@ public class RegisterPage extends JFrame implements ActionListener{
                 try(FileWriter custWriter = new FileWriter("customer.txt", true))
                 {
                     custWriter.write(new_id+ ","+ name+ ","+ email+ ","+ password+ "\n");
-                } catch (IOException ex){
+                }catch(FileNotFoundException ex){
+                    messageLabel.setText("customer_id file not found.");
+                    return;
+                }catch (IOException ex){
                     messageLabel.setText("Error writing customer.txt");
                     return;
                 }
@@ -379,6 +387,9 @@ public class RegisterPage extends JFrame implements ActionListener{
                 }
                 registerSuccess = true;
              
+            }catch(FileNotFoundException ex){
+                messageLabel.setText("customer_id file not found.");
+                return;
             }catch (IOException ex) {
                 messageLabel.setText("Error reading customer_id.txt");
                 return;

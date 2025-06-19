@@ -15,9 +15,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -50,11 +52,12 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
 {
     //variable declaration
     private String memberID, memberName;
-    private JLabel titleLabel, emailLabel, passwordLabel, messageLabel;
+    private JLabel titleLabel, emailLabel, passwordLabel, messageLabel,imglb;
     private JTextField emailTf;
     private JPasswordField passwordTf;
     private JButton loginBtn, signUpBtn;
     private JCheckBox passwordCb;
+    ImageIcon img = new ImageIcon("logo.png");
 
     public static void main(String[] args) 
     {
@@ -74,13 +77,17 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         passwordTf = new JPasswordField();
         loginBtn = new JButton("LOGIN");
         signUpBtn = new JButton("SIGN UP");
+        imglb = new JLabel(img);
         messageLabel = new JLabel("");//error message label
 
         //blue title bar at top
-        JPanel titlePanel = new JPanel();
+        JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.setPreferredSize(new Dimension(400, 80));
-        titlePanel.add(titleLabel);
         titlePanel.setBackground(new Color(29, 61, 89));
+        //logo
+        titlePanel.add(imglb, BorderLayout.WEST);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
+
         titleLabel.setForeground(Color.WHITE);
 
         //email input(label & textfield)
@@ -174,11 +181,11 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
             String password = String.valueOf(passwordTf.getPassword()).trim();
 
             boolean loginSuccess = false;
-            
+            messageLabel.setForeground(Color.RED);//set message color
+
             //check if fields is empty
             if (email.trim().isEmpty() || password.trim().isEmpty()) 
             {
-                messageLabel.setForeground(Color.RED);//set message color
                 messageLabel.setText("Please fill in all fields.");//set message content
                 return;
             }
@@ -186,7 +193,6 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
             //check email format
             if(!isValidEmail(email))
             {
-                messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid email format.");
                 return;
             }
@@ -221,22 +227,23 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
                 } 
                 readFile.close();
                 //event handling when has read file error
+            } catch(FileNotFoundException ex){
+                messageLabel.setText("customer file not found.");
+                return;
             } catch (IOException ex) {
-                messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Error reading file.");
                 return;
             }
+            
 
             if (loginSuccess) 
             {
-                messageLabel.setForeground(Color.GREEN);
                 JOptionPane.showMessageDialog(this, "Login successfully!");//pop up dialog to show success message
                 new WelcomePage(memberID, memberName);//redirect to welcome page
                 this.dispose();//close this page
             } 
             else //login failed
             {
-                messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid Email or Password");
             }
         }
