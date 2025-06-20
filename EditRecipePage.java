@@ -83,14 +83,14 @@ public class EditRecipePage extends JDialog implements ActionListener{
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); //vertical layout
 
         //basic info panel
-        basicInfoPanel = new JPanel(new GridLayout(3, 2, 10, 10)); //grid layout for  basic field
+        basicInfoPanel = new JPanel(new GridLayout(3, 2)); //grid layout for  basic field
         basicInfoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); //padding
 
         //name field setup
         namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(new JLabel("Name:"));
         tfName = new JTextField(recipe.getRecipeName(), 20);
-        tfName.setPreferredSize(new Dimension(250, 30));
+        tfName.setPreferredSize(new Dimension(250, 50));
         namePanel.add(tfName);
         basicInfoPanel.add(namePanel);
 
@@ -98,7 +98,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         timePanel.add(new JLabel("Prepare Time:"));
         tfTime = new JTextField(recipe.getTime(), 20);
-        tfTime.setPreferredSize(new Dimension(250, 30));
+        tfTime.setPreferredSize(new Dimension(250, 50));
         timePanel.add(tfTime);
         basicInfoPanel.add(timePanel);
 
@@ -108,7 +108,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         String[] difficulty = {"1", "2", "3", "4", "5"};
         cDifficulty = new JComboBox<>(difficulty);
         cDifficulty.setSelectedItem(recipe.getDifficulty());
-        cDifficulty.setPreferredSize(new Dimension(250, 30));
+        cDifficulty.setPreferredSize(new Dimension(250, 50));
         difficultyPanel.add(cDifficulty);
         basicInfoPanel.add(difficultyPanel);
 
@@ -116,7 +116,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         categoryPanel.add(new JLabel("Category:"));
         cCategory = new JComboBox<>();
-        cCategory.setPreferredSize(new Dimension(250, 30));
+        cCategory.setPreferredSize(new Dimension(250, 50));
         loadCategories();
         cCategory.setSelectedItem(recipe.getCategoryID() + "," + categoryName);
         categoryPanel.add(cCategory);
