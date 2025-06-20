@@ -158,8 +158,7 @@ public class RecipeDisplayPage extends JFrame {
             goToRecipeDetail.setFocusPainted(false); //remove text border (AbstractButton)
             goToRecipeDetail.setContentAreaFilled(false); //no fill color onclick (AbstractButton)
             goToRecipeDetail.setOpaque(true); //show background color (JComponent)
-            goToRecipeDetail.setPreferredSize(new Dimension(500, 50)); //these 3 belong to Component
-            goToRecipeDetail.setMaximumSize(new Dimension(200, 40));
+            goToRecipeDetail.setMaximumSize(new Dimension(200, 40));//to fixed the button size
             goToRecipeDetail.setMinimumSize(new Dimension(200, 40));
             
             //determine the current recipe from the Recipes object array
