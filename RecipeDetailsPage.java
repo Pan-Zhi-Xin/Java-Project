@@ -212,8 +212,8 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
                     taDesc.setPreferredSize(new Dimension(460, 100)); 
 
                     descPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-                    descPanel.add(descTitle, BorderLayout.NORTH);
-                    descPanel.add(taDesc, BorderLayout.CENTER);
+                    descPanel.add(descTitle);
+                    descPanel.add(taDesc);
 
                     //add to wrapper in vertical order
                     infoWrapper.add(timePanel);
