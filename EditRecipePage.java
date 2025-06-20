@@ -47,13 +47,14 @@ import java.awt.event.ActionListener;
 //public class to display edit recipe page
 public class EditRecipePage extends JDialog implements ActionListener{
     //declare class variables for the page's components
+    private JPanel mainPanel, basicInfoPanel, namePanel, difficultyPanel, categoryPanel, descriptionPanel, imagePanel, ingredientButtonPanel, stepPanel, buttonPanel;
     private JTextField tfName, tfTime;
     private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
     private JTable tIngredient;
     private JButton bImage, bSave, bAdd, bSub, bCancel;
     private JLabel image;
-    private JScrollPane sp;
+    private JScrollPane sp, spDescription, spIngredientTable;
     //information about the member, category and image path
     private String imagePath;
     private String memberID, memberName, categoryName;
@@ -78,15 +79,15 @@ public class EditRecipePage extends JDialog implements ActionListener{
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);   //close the dialog when disposed
 
         //main panel with vertical layout
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); //vertical layout
 
         //basic info panel
-        JPanel basicInfoPanel = new JPanel(new GridLayout(3, 2, 10, 10)); //grid layout for  basic field
+        basicInfoPanel = new JPanel(new GridLayout(3, 2, 10, 10)); //grid layout for  basic field
         basicInfoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); //padding
 
         //name field setup
-        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(new JLabel("Name:"));
         tfName = new JTextField(recipe.getRecipeName(), 20);
         tfName.setPreferredSize(new Dimension(250, 30));
@@ -102,7 +103,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         basicInfoPanel.add(timePanel);
 
         //difficulty drop-down setup
-        JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         difficultyPanel.add(new JLabel("Difficulty (1-5):"));
         String[] difficulty = {"1", "2", "3", "4", "5"};
         cDifficulty = new JComboBox<>(difficulty);
@@ -112,7 +113,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         basicInfoPanel.add(difficultyPanel);
 
         //category drop-down setup
-        JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         categoryPanel.add(new JLabel("Category:"));
         cCategory = new JComboBox<>();
         cCategory.setPreferredSize(new Dimension(250, 30));
@@ -122,18 +123,18 @@ public class EditRecipePage extends JDialog implements ActionListener{
         basicInfoPanel.add(categoryPanel);
 
         //description text area setup
-        JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         descriptionPanel.add(new JLabel("Description:"));
         taDescription = new JTextArea(recipe.getDescription(), 5, 20);
         taDescription.setLineWrap(true);
         taDescription.setWrapStyleWord(true);
-        JScrollPane scrollDescription = new JScrollPane(taDescription);
-        scrollDescription.setPreferredSize(new Dimension(250, 100));
-        descriptionPanel.add(scrollDescription);
+        spDescription = new JScrollPane(taDescription);
+        spDescription.setPreferredSize(new Dimension(250, 100));
+        descriptionPanel.add(spDescription);
         basicInfoPanel.add(descriptionPanel);
 
         //image selection setup
-        JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         imagePanel.add(new JLabel("Image:"));
         bImage = new JButton("Upload Image");
         bImage.addActionListener(this);
@@ -178,12 +179,12 @@ public class EditRecipePage extends JDialog implements ActionListener{
             }
         }
         
-        JScrollPane spIngredientTable = new JScrollPane(tIngredient);
+        spIngredientTable = new JScrollPane(tIngredient);
         mainPanel.add(new JLabel("Ingredients:"));
         mainPanel.add(spIngredientTable);
 
         //add/Remove buttons for ingredients
-        JPanel ingredientButtonPanel = new JPanel();
+        ingredientButtonPanel = new JPanel();
         bAdd = new JButton("Add Ingredient");
         bAdd.setFont(new Font("Roboto", Font.PLAIN, 20));
         bAdd.setForeground(Color.white);
@@ -201,7 +202,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         mainPanel.add(ingredientButtonPanel);
 
         //step panel
-        JPanel stepPanel = new JPanel(new BorderLayout());
+        stepPanel = new JPanel(new BorderLayout());
         stepPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         stepPanel.add(new JLabel("Steps (Press ENTER while typing the next step) :"), BorderLayout.NORTH);
         taStep = new JTextArea(recipe.getSteps().replace(";", "\n"), 10, 20);
@@ -211,7 +212,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         mainPanel.add(stepPanel);
 
         //buttons panel
-        JPanel buttonPanel = new JPanel();
+        buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         bSave = new JButton("Save Changes");
         bSave.setFont(new Font("Roboto", Font.PLAIN, 20));
