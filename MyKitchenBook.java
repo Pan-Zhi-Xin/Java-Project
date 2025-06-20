@@ -43,14 +43,15 @@ import java.io.IOException;            //to detect IOException
 //for validation
 import java.util.regex.Pattern;        //to validate email using regular expressions
 
-class member extends JFrame {
-    
+class Member extends JFrame 
+{    
     protected String memberID;
     protected String memberName;
-    protected String memberemail;
+    protected String memberEmail;
     protected String memberPassword;
     
-    public member() {
+    public Member()
+    {
         setTitle("My Kitchen Book");//set page title
         setSize(1000, 700);//set page size
         setLocationRelativeTo(null);//center on screen
@@ -59,8 +60,8 @@ class member extends JFrame {
     }
     
     //check email format method
-    protected boolean isValidEmail(String email) {
-      
+    protected boolean isValidEmail(String email) 
+    {
         // Regular expression to match valid email formats
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
                             "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
@@ -74,7 +75,7 @@ class member extends JFrame {
 }
 
 //main class for My Kitchen Book (login)
-public class MyKitchenBook extends member implements ActionListener
+public class MyKitchenBook extends Member implements ActionListener
 {
     //JComponents declaration
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel,imglb;
@@ -199,21 +200,21 @@ public class MyKitchenBook extends member implements ActionListener
         if (e.getSource() == loginBtn) 
         {
             //get email & password
-            memberemail = emailTf.getText().trim();
+            memberEmail = emailTf.getText().trim();
             memberPassword = String.valueOf(passwordTf.getPassword()).trim();
 
             boolean loginSuccess = false;
             messageLabel.setForeground(Color.RED);//set message color
 
             //check if fields is empty
-            if (memberemail.trim().isEmpty() || memberPassword.trim().isEmpty()) 
+            if (memberEmail.trim().isEmpty() || memberPassword.trim().isEmpty()) 
             {
                 messageLabel.setText("Please fill in all fields.");//set message content
                 return;
             }
             
             //check email format
-            if(!isValidEmail(memberemail))
+            if(!isValidEmail(memberEmail))
             {
                 messageLabel.setText("Invalid email format.");
                 return;
@@ -236,7 +237,7 @@ public class MyKitchenBook extends member implements ActionListener
                         String custPassword = parts[3].trim();
                         
                         //check if email & password is matches
-                        if (memberemail.equals(custEmail) && memberPassword.equals(custPassword))
+                        if (memberEmail.equals(custEmail) && memberPassword.equals(custPassword))
                         {
                             loginSuccess = true;
                             // get memberID from txt file
