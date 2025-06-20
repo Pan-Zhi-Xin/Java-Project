@@ -193,6 +193,7 @@ public class RecipeDisplayPage extends JFrame {
         //display the mainPanel
         add(RecipeDisplayPagePanel);
         setVisible(true);
+        setTitle("Recipe Display Page");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); //center the mainPanel on screen
