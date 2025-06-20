@@ -7,39 +7,46 @@
 //declare package
 package com.mycompany.java_project;
 
+//ccanner for reading files
+import java.util.Scanner;
+//for layout
+import java.awt.FlowLayout;
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import javax.swing.BoxLayout;
+//for GUI
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.BorderFactory;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+//for file I/O
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+//for error handling
+import java.io.IOException;
+//for event handling
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+//public class to display edit recipe page
 public class EditRecipePage extends JDialog implements ActionListener{
+    //declare class variables for the page's components
     private JTextField tfName, tfTime;
     private JComboBox cDifficulty, cCategory;
     private JTextArea taDescription, taStep;
@@ -47,14 +54,18 @@ public class EditRecipePage extends JDialog implements ActionListener{
     private JButton bImage, bSave, bAdd, bSub, bCancel;
     private JLabel image;
     private JScrollPane sp;
+    //information about the member, category and image path
     private String imagePath;
     private String memberID, memberName, categoryName;
     private int categoryID;
+    //Recipe object
     private Recipes recipe;
+    //model for ingredients table
     private DefaultTableModel ingredientModel;
 
-     public EditRecipePage(RecipeDetailsPage parent, String memberID, String memberName, Recipes recipe, int categoryID, String categoryName) {
-        super(parent, "Edit Recipe", true);
+    //constructor for editing the recipe
+    public EditRecipePage(RecipeDetailsPage parent, String memberID, String memberName, Recipes recipe, int categoryID, String categoryName) {
+        super(parent, "Edit Recipe", true); //call parent constructor for dialog
         this.memberID = memberID;
         this.memberName = memberName;
         this.recipe = recipe;
@@ -62,18 +73,19 @@ public class EditRecipePage extends JDialog implements ActionListener{
         this.categoryName = categoryName;
         this.imagePath = recipe.getImagePath();
 
-        setSize(1000, 700);
-        setLocationRelativeTo(parent);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(1000, 700); //set dialog size
+        setLocationRelativeTo(parent);  //center the dialog relative to parent
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);   //close the dialog when disposed
 
+        //main panel with vertical layout
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); //vertical layout
 
-        // ---------- Basic Info Panel ----------
-        JPanel basicInfoPanel = new JPanel(new GridLayout(3, 2, 10, 10));
-        basicInfoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        //basic info panel
+        JPanel basicInfoPanel = new JPanel(new GridLayout(3, 2, 10, 10)); //grid layout for  basic field
+        basicInfoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); //padding
 
-        // Name
+        //name field setup
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         namePanel.add(new JLabel("Name:"));
         tfName = new JTextField(recipe.getRecipeName(), 20);
@@ -81,7 +93,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         namePanel.add(tfName);
         basicInfoPanel.add(namePanel);
 
-        // Prepare Time
+        //prepare time field setup
         JPanel timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         timePanel.add(new JLabel("Prepare Time:"));
         tfTime = new JTextField(recipe.getTime(), 20);
@@ -89,7 +101,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         timePanel.add(tfTime);
         basicInfoPanel.add(timePanel);
 
-        // Difficulty
+        //difficulty drop-down setup
         JPanel difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         difficultyPanel.add(new JLabel("Difficulty (1-5):"));
         String[] difficulty = {"1", "2", "3", "4", "5"};
@@ -99,7 +111,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         difficultyPanel.add(cDifficulty);
         basicInfoPanel.add(difficultyPanel);
 
-        // Category
+        //category drop-down setup
         JPanel categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         categoryPanel.add(new JLabel("Category:"));
         cCategory = new JComboBox<>();
@@ -109,7 +121,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         categoryPanel.add(cCategory);
         basicInfoPanel.add(categoryPanel);
 
-        // Description
+        //description text area setup
         JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         descriptionPanel.add(new JLabel("Description:"));
         taDescription = new JTextArea(recipe.getDescription(), 5, 20);
@@ -120,7 +132,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         descriptionPanel.add(scrollDescription);
         basicInfoPanel.add(descriptionPanel);
 
-        // Image Upload
+        //image selection setup
         JPanel imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         imagePanel.add(new JLabel("Image:"));
         bImage = new JButton("Upload Image");
@@ -128,7 +140,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         image = new JLabel();
         image.setPreferredSize(new Dimension(200, 100));
         
-        // Load existing image
+        //load existing image
         if (recipe.getImagePath() != null && !recipe.getImagePath().isEmpty()) {
             ImageIcon icon = new ImageIcon(recipe.getImagePath());
             if (icon.getImage() != null) {
@@ -141,9 +153,10 @@ public class EditRecipePage extends JDialog implements ActionListener{
         imagePanel.add(image);
         basicInfoPanel.add(imagePanel);
 
+        //add basic info panel to main panel
         mainPanel.add(basicInfoPanel);
 
-        // ---------- Ingredients Table ----------
+        //ingredients table 
         String[] columnNames = {"Ingredient", "Quantity"};
         ingredientModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -154,7 +167,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         tIngredient = new JTable(ingredientModel);
         tIngredient.setPreferredScrollableViewportSize(new Dimension(900, 150));
         
-        // Load existing ingredients
+        //load existing ingredients
         if (recipe.getIngredients() != null && !recipe.getIngredients().isEmpty()) {
             String[] ingredients = recipe.getIngredients().split(",");
             for (String ingredient : ingredients) {
@@ -169,7 +182,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         mainPanel.add(new JLabel("Ingredients:"));
         mainPanel.add(spIngredientTable);
 
-        // Add/Remove buttons for Ingredients
+        //add/Remove buttons for ingredients
         JPanel ingredientButtonPanel = new JPanel();
         bAdd = new JButton("Add Ingredient");
         bAdd.setFont(new Font("Roboto", Font.PLAIN, 20));
@@ -187,7 +200,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         ingredientButtonPanel.add(bSub);
         mainPanel.add(ingredientButtonPanel);
 
-        // ---------- Step Panel ----------
+        //step panel
         JPanel stepPanel = new JPanel(new BorderLayout());
         stepPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         stepPanel.add(new JLabel("Steps (Press ENTER while typing the next step) :"), BorderLayout.NORTH);
@@ -197,7 +210,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
         mainPanel.add(stepPanel);
 
-        // ---------- Buttons Panel ----------
+        //buttons panel
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         bSave = new JButton("Save Changes");
@@ -216,13 +229,14 @@ public class EditRecipePage extends JDialog implements ActionListener{
         buttonPanel.add(bCancel);
         mainPanel.add(buttonPanel);
 
-        // ---------- Wrap with ScrollPane ----------
+        //wrap with scroll pane
         sp = new JScrollPane(mainPanel);
         add(sp);
 
         setVisible(true);
     }
 
+    //event listener method
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == bImage) {
@@ -247,6 +261,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         }
     }
 
+    //method to load category options from the category file
     private void loadCategories() {
         String filename = memberID + "_category.txt";
         File file = new File(filename);
@@ -267,6 +282,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         }
     }
 
+    //method to save updated recipe details
     private void updateRecipe() {
         try {
             String id = String.valueOf(recipe.getRecipeID());
@@ -281,17 +297,18 @@ public class EditRecipePage extends JDialog implements ActionListener{
             String steps = taStep.getText().replace("\n", ";").trim();
             String image = imagePath;
 
-            // Validate fields
+            //validate fields
             if (name.isEmpty() || time.isEmpty() || description.isEmpty() || steps.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please fill in all required fields.");
                 return;
             }
 
+            //validate time
             if (!time.matches("^([01]?\\d|2[0-3]):[0-5]\\d$")) {
                 throw new IllegalArgumentException("Time format is invalid! Please use HH:MM (e.g., 09:30 or 18:45).");
             }
 
-            // Validate ingredients
+            //validate ingredients
             StringBuilder ingredients = new StringBuilder();
             for (int i = 0; i < tIngredient.getRowCount(); i++) {
                 Object ing = tIngredient.getValueAt(i, 0);
@@ -318,11 +335,12 @@ public class EditRecipePage extends JDialog implements ActionListener{
                 return;
             }
 
+            //final updated line for the recipe
             String updatedLine = String.join("|", 
                 id, name, description, time, difficulty, 
                 image, categoryID, ingredients.toString(), steps);
 
-            // Update the recipe file
+            //update the recipe file
             File file = new File(memberID + "_recipe.txt");
             File tempFile = new File(memberID + "_recipe_temp.txt");
 
@@ -340,7 +358,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
                 }
             }
 
-            // Replace the original file
+            //replace the original file
             if (file.delete()) {
                 if (!tempFile.renameTo(file)) {
                     throw new IOException("Could not rename temp file");
@@ -351,7 +369,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
 
             JOptionPane.showMessageDialog(this, "Recipe updated successfully!");
             
-            // Update the recipe object with new values
+            //update the recipe object with new values
             recipe.setRecipeName(name);
             recipe.setDescription(description);
             recipe.setTime(time);
@@ -363,7 +381,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
 
             dispose();
             
-            // Refresh the parent window
+            //refresh the parent window
             RecipeDetailsPage parent = (RecipeDetailsPage) getParent();
             parent.dispose();
             new RecipeDetailsPage(memberID, memberName, recipe, Integer.parseInt(categoryID), newCategoryName);
@@ -380,6 +398,7 @@ public class EditRecipePage extends JDialog implements ActionListener{
         }
     }
 
+    //method to upload an image
     private void uploadImage() {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -399,13 +418,13 @@ public class EditRecipePage extends JDialog implements ActionListener{
                 return;
             }
 
-            // Create images directory if it doesn't exist
+            //create images directory if it doesn't exist
             File folder = new File("src/images");
             if (!folder.exists()) {
                 folder.mkdirs();
             }
 
-            // Copy the file to the images directory
+            //copy the file to the images directory
             File destination = new File("src/images/" + selectedFile.getName());
 
             try {
