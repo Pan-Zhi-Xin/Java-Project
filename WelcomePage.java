@@ -360,7 +360,7 @@ public class WelcomePage extends JFrame {
                 deleteCategory.setFocusPainted(false); //remove border around text
                 deleteCategory.setBorderPainted(false); //remove button border
                 deleteCategory.setContentAreaFilled(false); //no fill colour onclick
-                editCategory.setPreferredSize(new Dimension(60, 50));
+                deleteCategory.setPreferredSize(new Dimension(60, 50));
                 deleteCategory.setOpaque(true); //show background colour
                 
                 deleteCategory.addActionListener(e -> { //trigger delete category event
