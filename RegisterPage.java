@@ -86,7 +86,7 @@ public class RegisterPage extends JFrame implements ActionListener
 
         //create top panel
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setPreferredSize(new Dimension(400, 150));
+        topPanel.setPreferredSize(new Dimension(1000, 150));
 
         //title label in center
         JPanel titlePanel = new JPanel();
