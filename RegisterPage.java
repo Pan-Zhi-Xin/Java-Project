@@ -275,7 +275,7 @@ public class RegisterPage extends JFrame implements ActionListener{
     }
     
     //clear form method
-    void clearForm()
+    private void clearForm()
     {
         nameTf.setText("");
         emailTf.setText("");
