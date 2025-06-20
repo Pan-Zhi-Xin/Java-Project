@@ -292,6 +292,7 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
 
         add(mainPanel);
         setVisible(true);
+        setLocationRelativeTo(null); //center the mainPanel on screen
     }
 
     //action listener method for buttons
