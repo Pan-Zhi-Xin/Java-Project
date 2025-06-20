@@ -4,42 +4,56 @@
 // 1221208105 KONG LEE CHING
 // 1221208223 LOY YU XUAN
 
+//declare package
 package com.mycompany.java_project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.regex.Pattern;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+//for layouts
+import java.awt.BorderLayout;      //to enable borderlayout
+import java.awt.FlowLayout;        //to enable flowlayout
+import java.awt.GridLayout;        //to enable gridlayout
+
+//for GUI
+import java.awt.Color;             //for color customization
+import java.awt.Dimension;         //to enable height,width of component
+import java.awt.Font;              //for font customization
+import javax.swing.JButton;        //for enable JButton
+import javax.swing.JCheckBox;      //for enable JCheckBox
+import javax.swing.JFrame;         //for enable JFrame
+import javax.swing.JLabel;         //for enable JLabel
+import javax.swing.JOptionPane;    //for enable JOptionPane
+import javax.swing.JPanel;         //for enable JPanel
+import javax.swing.JPasswordField; //for enable JPasswordField
+import javax.swing.JTextField;     //for enable JTextField
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+//for event handling
+import java.awt.event.ActionEvent;     //to enable trigger events
+import java.awt.event.ActionListener;  //to handle ActionEvents
+
+//for File I/O
+import java.io.BufferedReader;     //to enable file reading
+import java.io.FileReader;         //to enable file reading
+import java.io.FileWriter;         //to enable file writting
+
+//for error handling
+import java.io.FileNotFoundException;  //to detect FileNotFoundException
+import java.io.IOException;           //to detect IOException
+
+//for validation
+import java.util.regex.Pattern;        //to validate email & password using regular expressions
+
 //registration page that extends JFrame
-public class RegisterPage extends JFrame implements ActionListener{
-    //variable declaration
+public class RegisterPage extends JFrame implements ActionListener
+{
+    //JComponents declaration
     private JLabel titleLabel,nameLabel,emailLabel,passwordLabel,confPasswordLabel,messageLabel;
     private JTextField nameTf,emailTf;
     private JPasswordField passwordTf,confPasswordTf;
     private JButton cancelBtn,signUpBtn,clearBtn;
     private JCheckBox passwordCb;
     
+    //constructor to display the GUI
     public RegisterPage() {
         setSize(1000, 700);//set page size
         setTitle("Register");//set page title
@@ -187,16 +201,20 @@ public class RegisterPage extends JFrame implements ActionListener{
     private boolean isExistName(String input) {
         try
         {
+            //try to read customer.txt file
             BufferedReader readFile = new BufferedReader (new FileReader("customer.txt"));
             String line = readFile.readLine();
 
             while (line != null)
             {
+                //split and get each part from file
                 String[] parts = line.split(",");
                 if (parts.length == 4)
                 {
+                    //get name from file
                     String custName = parts[1].trim();
 
+                    //check if input name & existing name is matches
                     if (input.equals(custName))
                     {
                         return true;
@@ -205,6 +223,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 line = readFile.readLine();
             } 
             readFile.close();
+            //event handling when has read file error
         }catch(FileNotFoundException ex){
                 messageLabel.setText("customer file not found.");
         }catch (IOException ex) {
@@ -217,16 +236,19 @@ public class RegisterPage extends JFrame implements ActionListener{
     private boolean isExistEmail(String input) {
         try
         {
+            //try to read customer.txt file
             BufferedReader readFile = new BufferedReader (new FileReader("customer.txt"));
             String line = readFile.readLine();
 
             while (line != null)
             {
+                //split and get each part from file
                 String[] parts = line.split(",");
                 if (parts.length == 4)
                 {
                     String custEmail = parts[2].trim();
 
+                    //check if input email & existing email is matches
                     if (input.equals(custEmail))
                     {
                         return true;
@@ -235,6 +257,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 line = readFile.readLine();
             } 
             readFile.close();
+            //event handling when has read file error
         }catch(FileNotFoundException ex){
                 messageLabel.setText("customer file not found.");
         }catch (IOException ex) {
@@ -286,6 +309,7 @@ public class RegisterPage extends JFrame implements ActionListener{
     //handle button click event
     @Override
     public void actionPerformed(ActionEvent e) {
+        //action listener when sign up button clicked
         if (e.getSource() == signUpBtn) {
             //get form values
             String name = nameTf.getText().trim();
@@ -293,6 +317,7 @@ public class RegisterPage extends JFrame implements ActionListener{
             String password = String.valueOf(passwordTf.getPassword()).trim();
             String confPassword = String.valueOf(confPasswordTf.getPassword()).trim();
 
+            //set default registration status
             boolean registerSuccess = false;
             
             try 
@@ -346,6 +371,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                     return;
                 }
 
+                //check if password & confirm password is matches
                 if(!password.equals(confPassword)) {
                     messageLabel.setText("Password do not match.");
                     return;
@@ -355,6 +381,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 try(FileWriter idWriter = new FileWriter ("customer_id.txt")) 
                 {
                     idWriter.write(String.valueOf(new_id + 1));
+                    //event handling
                 }catch(FileNotFoundException ex){
                     messageLabel.setText("customer_id file not found.");
                     return;
@@ -367,6 +394,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 try(FileWriter custWriter = new FileWriter("customer.txt", true))
                 {
                     custWriter.write(new_id+ ","+ name+ ","+ email+ ","+ password+ "\n");
+                    //event handling
                 }catch(FileNotFoundException ex){
                     messageLabel.setText("customer_id file not found.");
                     return;
@@ -380,12 +408,14 @@ public class RegisterPage extends JFrame implements ActionListener{
                 try(FileWriter categoryWriter = new FileWriter(categoryFileName)) 
                 {
                     categoryWriter.write("1,Default\n");
+                    //event handling
                 } catch (IOException ex){
                     messageLabel.setText("Error writing categoty.txt");
                     return;
                 }
-                registerSuccess = true;
-             
+                registerSuccess = true; //update registration status to success
+
+             //event handling
             }catch(FileNotFoundException ex){
                 messageLabel.setText("customer_id file not found.");
                 return;
@@ -394,6 +424,7 @@ public class RegisterPage extends JFrame implements ActionListener{
                 return;
             }
 
+            //when register successful
             if (registerSuccess){
                 messageLabel.setText("");
                 JOptionPane.showMessageDialog(this, "Register successfully!");
@@ -401,15 +432,18 @@ public class RegisterPage extends JFrame implements ActionListener{
                 this.dispose();//close this page
             }
         }
+        //action listener when clear button clicked
         else if (e.getSource() == clearBtn)
         {
             clearForm();//call clear form method
         }
+        //action listener when cancel button clicked
         else if (e.getSource() == cancelBtn)
         {
             new MyKitchenBook();//return to login page
             this.dispose();
         }
+        //action listener when show password check box button clicked
         else if (e.getSource() == passwordCb)
         {
             if (passwordCb.isSelected()) {

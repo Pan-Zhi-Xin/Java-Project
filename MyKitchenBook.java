@@ -4,33 +4,46 @@
 // 1221208105 KONG LEE CHING
 // 1221208223 LOY YU XUAN
 
+//declare package
 package com.mycompany.java_project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Pattern;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+//for layouts
+import java.awt.BorderLayout;      //to enable borderlayout
+import java.awt.FlowLayout;        //to enable flowlayout
+import java.awt.GridLayout;        //to enable gridlayout
+
+//for GUI
+import java.awt.Color;             //for color customization
+import java.awt.Dimension;         //to enable height,width of component
+import java.awt.Font;              //for font customization
+import java.awt.Image;             //for image
+import javax.swing.ImageIcon;      //for image
+import javax.swing.JButton;        //for enable JButton
+import javax.swing.JCheckBox;      //for enable JCheckBox
+import javax.swing.JFrame;         //for enable JFrame
+import javax.swing.JLabel;         //for enable JLabel
+import javax.swing.JOptionPane;    //for enable JOptionPane
+import javax.swing.JPanel;         //for enable JPanel
+import javax.swing.JPasswordField; //for enable JPasswordField
+import javax.swing.JTextField;     //for enable JTextField
 import javax.swing.UIManager;
 
+//for event handling
+import java.awt.event.ActionEvent;     //to enable trigger events
+import java.awt.event.ActionListener;  //to handle ActionEvents
+
+//for File I/O
+import java.io.BufferedReader;     //to enable file reading
+import java.io.FileReader;         //to enable file reading
+
+//for error handling
+import java.io.FileNotFoundException;  //to detect FileNotFoundException
+import java.io.IOException;            //to detect IOException
+
+//for validation
+import java.util.regex.Pattern;        //to validate email using regular expressions
+
+//base class for set font style and page size
 class BasicDesign extends JFrame {
     //set font size & style
     protected Font titleFont = new Font("Roboto", Font.BOLD, 45);
@@ -48,10 +61,10 @@ class BasicDesign extends JFrame {
     }
 }
 
-//main page for My Kitchen Book login
+//main class for My Kitchen Book login
 public class MyKitchenBook extends BasicDesign implements ActionListener
 {
-    //variable declaration
+    //JComponents declaration
     private String memberID, memberName;
     private JLabel titleLabel, emailLabel, passwordLabel, messageLabel,imglb;
     private JTextField emailTf;
@@ -66,6 +79,7 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         frame.setVisible(true);//show page
     }
 
+    //constructor to display the GUI
     public MyKitchenBook() {
         //call the constructor of BasicDesign and pass page title name
         super("My Kitchen Book");
@@ -175,9 +189,11 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
         return p.matcher(email).matches();
     }
 
+    //handle button click event
     @Override
     public void actionPerformed(ActionEvent e) 
     {
+        //action listener when login button clicked
         if (e.getSource() == loginBtn) 
         {
             //get email & password
@@ -239,7 +255,7 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
                 return;
             }
             
-
+            //when login successful
             if (loginSuccess) 
             {
                 JOptionPane.showMessageDialog(this, "Login successfully!");//pop up dialog to show success message
@@ -251,13 +267,16 @@ public class MyKitchenBook extends BasicDesign implements ActionListener
                 messageLabel.setText("Invalid Email or Password");
             }
         }
+        //action listener when sign up button clicked
         else if (e.getSource() == signUpBtn)
         {
             new RegisterPage();//redirect to register page
             this.dispose();
         }
+        //action listener when show password check box button clicked
         else if (e.getSource() == passwordCb)
         {
+            //when check box ticked
             if (passwordCb.isSelected()) {
                 passwordTf.setEchoChar('\u0000'); //show password
             } else {
