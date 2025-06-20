@@ -44,7 +44,7 @@ import java.io.PrintWriter;
 //public class to display the add recipe page
 public class AddRecipePage extends JFrame implements ActionListener{
     //declare class variables for the page's components
-    private JLabel image;
+    private JLabel image, nameLabel, timeLabel, difficultyLabel, categoryLabel, descLabel, imageLabel, ingredientLabel, stepLabel;
     private JTextField tfName, tfTime;
     private JPanel mainPanel, basicInfoPanel, namePanel, timePanel, categoryPanel, descriptionPanel, stepPanel, imagePanel, buttonPanel, ingredientButtonPanel, difficultyPanel;
     private JComboBox cDifficulty, cCategory;
@@ -81,24 +81,27 @@ public class AddRecipePage extends JFrame implements ActionListener{
         basicInfoPanel = new JPanel(new GridLayout(3, 2)); //initialize basic information panel
 
         //set up name panel
+        nameLabel = new JLabel("Name            :");
         namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        namePanel.add(new JLabel("Name            :"));
+        namePanel.add(nameLabel);
         tfName = new JTextField();
         tfName.setPreferredSize(new Dimension(250, 50));  //set name text field dimensions
         namePanel.add(tfName);
         basicInfoPanel.add(namePanel);
 
         //set up time panel
+        timeLabel = new JLabel("Prepare Time :");
         timePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        timePanel.add(new JLabel("Prepare Time :"));
+        timePanel.add(timeLabel);
         tfTime = new JTextField("HH:MM");
         tfTime.setPreferredSize(new Dimension(250, 50));
         timePanel.add(tfTime);
         basicInfoPanel.add(timePanel);
 
         //setup difficulty panel
+        difficultyLabel = new JLabel("Difficulty (1-5) :");
         difficultyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        difficultyPanel.add(new JLabel("Difficulty (1-5) :"));
+        difficultyPanel.add(difficultyLabel);
         String[] difficulty = {"1", "2", "3", "4", "5"};  ; //difficulty options
         cDifficulty = new JComboBox(difficulty);
         cDifficulty.setPreferredSize(new Dimension(250, 50));
@@ -106,8 +109,9 @@ public class AddRecipePage extends JFrame implements ActionListener{
         basicInfoPanel.add(difficultyPanel);
 
         //setup category panel
+        categoryLabel = new JLabel("Category        :");
         categoryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        categoryPanel.add(new JLabel("Category        :"));
+        categoryPanel.add(categoryLabel);
         cCategory = new JComboBox();
         cCategory.setPreferredSize(new Dimension(250, 50));
         loadCategories();
@@ -115,8 +119,9 @@ public class AddRecipePage extends JFrame implements ActionListener{
         basicInfoPanel.add(categoryPanel);
 
         //description
+        descLabel = new JLabel("Description    :");
         descriptionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        descriptionPanel.add(new JLabel("Description    :"));  // add description label
+        descriptionPanel.add(descLabel);  // add description label
         taDescription = new JTextArea();
         spDescription = new JScrollPane(taDescription);
         spDescription.setPreferredSize(new Dimension(250, 50));  //set scroll pane dimensions
@@ -124,8 +129,9 @@ public class AddRecipePage extends JFrame implements ActionListener{
         basicInfoPanel.add(descriptionPanel);
 
         //image upload
+        imageLabel = new JLabel("Image             :");
         imagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        imagePanel.add(new JLabel("Image             :"));
+        imagePanel.add(imageLabel);
         bImage = new JButton("Upload Image");
         bImage.addActionListener(this); //register listener for image button
         image = new JLabel();
@@ -143,7 +149,8 @@ public class AddRecipePage extends JFrame implements ActionListener{
         tIngredient = new JTable(ingredientModel);
         spIngredientTable = new JScrollPane(tIngredient);
         spIngredientTable.setPreferredSize(new Dimension(900, 100)); //set scroll pane dimensions
-        mainPanel.add(new JLabel("Ingredients:")); //add ingredients label
+        ingredientLabel = new JLabel("Ingredients:");
+        mainPanel.add(ingredientLabel); //add ingredients label
         mainPanel.add(spIngredientTable);
 
         //add/Remove buttons for Ingredients
@@ -163,8 +170,9 @@ public class AddRecipePage extends JFrame implements ActionListener{
         mainPanel.add(ingredientButtonPanel);
 
         //set up step panel
+        stepLabel = new JLabel("Steps (Press ENTER while typing the next step) :");
         stepPanel = new JPanel(new BorderLayout());
-        stepPanel.add(new JLabel("Steps (Press ENTER while typing the next step) :"), BorderLayout.NORTH);
+        stepPanel.add(stepLabel, BorderLayout.NORTH);
         taStep = new JTextArea(5, 10);
         stepPanel.add(new JScrollPane(taStep), BorderLayout.CENTER);
         mainPanel.add(stepPanel);
