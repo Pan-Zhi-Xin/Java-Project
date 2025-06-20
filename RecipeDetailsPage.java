@@ -40,11 +40,13 @@ import javax.swing.border.EmptyBorder;
 // public class to display recipe details page
 public class RecipeDetailsPage extends JFrame implements ActionListener{
     //declared JComponents
-    private JPanel mainPanel, topPanel, centerPanel, basicInfoPanel, infoWrapper, actionPanel, imagePanel, timePanel, difficultyPanel, descPanel, bottomPanel, ingredientsPanel, stepPanel, ingredientsPanelWrapper, stepsPanelWrapper, starsPanel;
+    private JPanel mainPanel, topPanel, centerPanel, basicInfoPanel, infoWrapper, actionPanel, imagePanel, timePanel, difficultyPanel, descPanel, bottomPanel, ingredientsPanel, stepPanel, ingredientsPanelWrapper, stepsPanelWrapper, starsPanel, checkBoxPanel;
     private JButton bBack, bEdit, bDelete, bShoppingList;
     private JLabel title, image, timeLabel, ingredientsTitle, stepsTitle, timeIconLabel, difficultyTextLabel, starLabel, descTitle;
     private JTextArea taIngredientsContent, taStepsContent, taDesc;
     private JScrollPane spBottom;
+    private JDialog shoppingDialog;
+    private JCheckBox checkBox;
     private Recipes recipe;
     //information about the member and category
     private String memberID;
@@ -335,19 +337,19 @@ public class RecipeDetailsPage extends JFrame implements ActionListener{
             String[] ingredients = allIngredients.split(",");
             
             //create the shopping list dialog
-            JDialog shoppingDialog = new JDialog(this, "Shopping List", true);
+            shoppingDialog = new JDialog(this, "Shopping List", true);
             shoppingDialog.setSize(500, 500);
             shoppingDialog.setLocationRelativeTo(this);
             shoppingDialog.setLayout(new BorderLayout());
             
-            JPanel checkBoxPanel = new JPanel();
+            checkBoxPanel  = new JPanel();
             checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
 
             //add a checkbox for each ingredient
             for (int i = 0;i< ingredients.length;i++) {
                 String ingredient = ingredients[i].trim();
                 //create a checkbox for each ingredient
-                JCheckBox checkBox = new JCheckBox(ingredient);
+                checkBox = new JCheckBox(ingredient);
                 checkBox.setFont(ingredientList);
                 checkBoxPanel.add(checkBox);
             }
