@@ -38,9 +38,9 @@ import java.io.IOException;             //to detect IOException
 //==============================================================================MAIN PANEL===============================================================================
 //public class to display the filtered recipe
 public class RecipeDisplayPage extends JFrame {
-    private JButton logout, addRecipe, goToRecipeDetail;
+    private JButton back, addRecipe, goToRecipeDetail;
     private JPanel topBar, recipePanel, RecipeDisplayPagePanel;
-    private JLabel message;
+    private JLabel selectedCategory;
     private ImageIcon image;
     private JScrollPane scrollRecipe;
     //declared array of Recipes object
@@ -51,27 +51,27 @@ public class RecipeDisplayPage extends JFrame {
         
 //==============================================================================TAB FUNCTION==============================================================================           
         //the return button to Log Out
-        logout = new JButton("<<");
-        logout.setFont(new Font("Roboto", Font.BOLD, 32));
-        logout.setForeground(Color.WHITE);
-        logout.setBackground(new Color(29, 61, 89));
-        logout.setFocusPainted(false); // remove border around text
-        logout.setBorderPainted(false); // remove border around button
-        logout.setContentAreaFilled(false); // no color fill onclick
-        logout.setOpaque(true); // show background color
-        logout.addActionListener(e -> { //return event trigger
+        back = new JButton("<<");
+        back.setFont(new Font("Roboto", Font.BOLD, 32));
+        back.setForeground(Color.WHITE);
+        back.setBackground(new Color(29, 61, 89));
+        back.setFocusPainted(false); // remove border around text
+        back.setBorderPainted(false); // remove border around button
+        back.setContentAreaFilled(false); // no color fill onclick
+        back.setOpaque(true); // show background color
+        back.addActionListener(e -> { //return event trigger
             //return to welcome page
             new WelcomePage(memberID,memberName);  
             this.dispose();
         });
         
         //the welcome message at the top
-        message = new JLabel("  "+categoryName);
-        message.setFont(new Font("Roboto",Font.BOLD,56));
-        message.setForeground(Color.white);
-        message.setBackground(new Color(29,61,89));
-        message.setOpaque(true); //show background color
-        message.setPreferredSize(new Dimension(500,120));
+        selectedCategory = new JLabel("  "+categoryName);
+        selectedCategory.setFont(new Font("Roboto",Font.BOLD,56));
+        selectedCategory.setForeground(Color.white);
+        selectedCategory.setBackground(new Color(29,61,89));
+        selectedCategory.setOpaque(true); //show background color
+        selectedCategory.setPreferredSize(new Dimension(500,120));
         
         //the add recipe button
         addRecipe = new JButton("+  ");
@@ -89,8 +89,8 @@ public class RecipeDisplayPage extends JFrame {
             });
         //combine logout button, welcome message & add button to craete the tab
         topBar = new JPanel(new BorderLayout());
-        topBar.add(logout, BorderLayout.WEST);
-        topBar.add(message, BorderLayout.CENTER);
+        topBar.add(back, BorderLayout.WEST);
+        topBar.add(selectedCategory, BorderLayout.CENTER);
         topBar.add(addRecipe,BorderLayout.EAST);
         
 //===========================================================================BODY COMPONENT AND FUNCTION===========================================================================
