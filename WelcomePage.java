@@ -153,7 +153,7 @@ public class WelcomePage extends JFrame {
                             writeCategory.close();
                             
                             //pop-up message to inform success addition
-                            JOptionPane.showMessageDialog(addDialog, newCategoryName + " added successfully!");
+                            JOptionPane.showMessageDialog(addDialog, newCategoryName + " added successfully!","Addition Successful",JOptionPane.INFORMATION_MESSAGE);
                             addDialog.dispose();  
                             //refresh the page to provide the latest category update
                             new WelcomePage(memberID, memberName);
@@ -323,7 +323,7 @@ public class WelcomePage extends JFrame {
                                 rewriteCategory.write(updatedCategory.toString());
                                 rewriteCategory.close();
                                 //pop-up message to notify the successful edit
-                                JOptionPane.showMessageDialog(editDialog, "Category name updated successfully!");
+                                JOptionPane.showMessageDialog(editDialog, "Category name updated successfully!","Edition Successful",JOptionPane.INFORMATION_MESSAGE);
                                 editDialog.dispose();
                                 new WelcomePage(memberID, memberName);
                                 WelcomePage.this.dispose();
@@ -426,7 +426,9 @@ public class WelcomePage extends JFrame {
                                 //Refresh the page to show the latest category content
                                 JOptionPane.showMessageDialog(
                                         WelcomePage.this, 
-                                        "Category deleted successfully!"
+                                        "Category deleted successfully!",
+                                        "Deletion Successful",
+                                        JOptionPane.INFORMATION_MESSAGE
                                 );
                                 new WelcomePage(memberID, memberName);
                                 WelcomePage.this.dispose();
@@ -461,6 +463,7 @@ public class WelcomePage extends JFrame {
         welcomePagePanel.add(scrollCategory, BorderLayout.CENTER);
         //display and configure the mainPanel
         add(welcomePagePanel);
+        setTitle("Welcome Page");
         setVisible(true);
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
